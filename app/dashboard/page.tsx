@@ -1,12 +1,12 @@
 import { createClient } from '@/lib/supabase-server'
-import { DashboardClient } from './DashboardClient'
 import { getFocusForMonth } from '@/lib/curriculum'
+import { DashboardClient } from './DashboardClient'
 
 const DEMO_PROFILE = {
   id: 'demo',
   artist_name: 'Demo Artist',
   current_month: 3,
-  avatar_url: null,
+  avatar_url: '',
   bio: 'Exploring figure drawing and expressive mark-making.',
 }
 
