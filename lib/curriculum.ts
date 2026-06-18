@@ -9,6 +9,15 @@ export type MonthFocus = {
     combined: string
   }
   weekly: string
+  artist: {
+    name: string
+    discipline: string
+    known_for: string
+    why_selected: string
+    youtube_search: string
+    lessons: string[]
+    study_challenge: string
+  }
 }
 
 export type Course = {
@@ -30,6 +39,19 @@ export const MONTH_PLAN: MonthFocus[] = [
       combined: 'Draw 5 dynamic poses, then rebuild each one with proportion guides and construction lines.',
     },
     weekly: 'Create one finished figure drawing showing clear movement and believable proportion. Upload the final plus 3 rough studies.',
+    artist: {
+      name: 'Bridgman',
+      discipline: 'Figurative drawing, anatomy illustration',
+      known_for: 'George Bridgman is known for his landmark books on the human figure, used in art schools for over a century.',
+      why_selected: 'His work breaks the figure into rhythmic, gestural masses — perfect for studying gesture and proportion together.',
+      youtube_search: 'Bridgman figure drawing gesture proportion tutorial',
+      lessons: [
+        'How the body\'s weight shifts create a natural gesture line from head to foot',
+        'How to simplify complex anatomy into readable proportional masses',
+        'How rhythm and flow connect one body part to the next',
+      ],
+      study_challenge: 'Copy 5 Bridgman figure drawings this week, focusing on his rhythmic line of action and how he establishes proportion with simple shapes.',
+    },
   },
   {
     month: 2,
@@ -42,6 +64,19 @@ export const MONTH_PLAN: MonthFocus[] = [
       combined: 'Choose 3 poses and build them with construction forms, then mark anatomy landmarks on top.',
     },
     weekly: 'Create a finished character pose where the body feels built, not guessed. Show construction and final version.',
+    artist: {
+      name: 'Andrew Loomis',
+      discipline: 'Figurative illustration, commercial art',
+      known_for: 'Andrew Loomis wrote Figure Drawing for All It\'s Worth, one of the most studied books on figure construction.',
+      why_selected: 'Loomis built every figure from simple 3D forms and clear anatomy landmarks — exactly what this month demands.',
+      youtube_search: 'Andrew Loomis figure construction anatomy tutorial',
+      lessons: [
+        'How to construct the head and torso as simple interlocking 3D forms',
+        'Where the key anatomy landmarks fall on a standing figure',
+        'How construction forms translate into finished, believable anatomy',
+      ],
+      study_challenge: 'Follow the Loomis method to construct 3 full figures from scratch this week — start with the skeleton, add construction forms, then refine.',
+    },
   },
   {
     month: 3,
@@ -54,6 +89,19 @@ export const MONTH_PLAN: MonthFocus[] = [
       combined: 'Design a small scene with clear perspective and a strong focal point. Keep it simple and readable.',
     },
     weekly: 'Create a finished scene using accurate perspective and a clear composition. The viewer should know where to look first.',
+    artist: {
+      name: 'Gustave Caillebotte',
+      discipline: 'Oil painting, Impressionism',
+      known_for: 'Caillebotte is known for bold perspective compositions showing Parisian streets with dramatic vanishing points.',
+      why_selected: 'His paintings are masterclasses in how perspective and composition work together to guide the viewer\'s eye.',
+      youtube_search: 'Gustave Caillebotte perspective composition analysis',
+      lessons: [
+        'How a strong vanishing point creates immediate depth and drama',
+        'How to use foreground, midground, and background to build space',
+        'How compositional lines direct the viewer\'s eye to the focal point',
+      ],
+      study_challenge: 'Choose one Caillebotte painting and do a compositional study — trace the perspective lines, identify the vanishing point, and map where the eye travels.',
+    },
   },
   {
     month: 4,
@@ -66,6 +114,19 @@ export const MONTH_PLAN: MonthFocus[] = [
       combined: 'Draw one portrait or object study using simple forms and three-value structure.',
     },
     weekly: 'Create a finished image that works in black and white first. Use light direction and value grouping.',
+    artist: {
+      name: 'John Singer Sargent',
+      discipline: 'Oil painting, watercolor, portraiture',
+      known_for: 'Sargent is celebrated for his mastery of light, loose brushwork, and ability to capture form with minimal strokes.',
+      why_selected: 'His portraits demonstrate how confident value structure and light logic create convincing three-dimensional form.',
+      youtube_search: 'John Singer Sargent value light form painting analysis',
+      lessons: [
+        'How he groups shadows into simple dark shapes before adding detail',
+        'How light direction defines form without outlining it',
+        'How limited value range creates harmony and focus',
+      ],
+      study_challenge: 'Do a master study of one Sargent portrait in grayscale only — focus on matching his value structure, not his brushwork.',
+    },
   },
   {
     month: 5,
@@ -74,10 +135,23 @@ export const MONTH_PLAN: MonthFocus[] = [
     note: 'Color should carry emotion, not just fill space.',
     daily: {
       primary: 'Paint 6 small color studies using limited palettes — no more than 4 colors per study.',
-      secondary: 'Create 5 small thumbnails in different moods (tense, calm, joyful, melancholy, mysterious) using color only.',
+      secondary: 'Create 5 small thumbnails in different moods using color only.',
       combined: 'Repaint an old study in two opposite moods. Same composition, different color temperature and palette.',
     },
     weekly: 'Create a finished image where the color palette is doing narrative work. Write one sentence explaining the mood intention.',
+    artist: {
+      name: 'James Turrell',
+      discipline: 'Light installation, perceptual art',
+      known_for: 'Turrell is known for immersive light environments that make viewers hyper-aware of color, mood, and perception.',
+      why_selected: 'His work proves that color alone — without form or subject — carries profound emotional weight and atmosphere.',
+      youtube_search: 'James Turrell color light mood perception art',
+      lessons: [
+        'How warm and cool color temperatures create completely different emotional states',
+        'How color saturation affects the mood and energy of an image',
+        'How limiting a palette to 2-3 hues creates harmony and intention',
+      ],
+      study_challenge: 'Create 3 small color studies this week — same subject, three completely different palettes, each targeting a specific mood.',
+    },
   },
   {
     month: 6,
@@ -90,6 +164,19 @@ export const MONTH_PLAN: MonthFocus[] = [
       combined: 'Put your character in a scene. The composition should reveal something about who they are.',
     },
     weekly: 'Create one finished illustration where a character\'s emotional state is clear without showing their face.',
+    artist: {
+      name: 'Shaun Tan',
+      discipline: 'Illustration, graphic novel, picture books',
+      known_for: 'Shaun Tan is known for wordless visual narratives that communicate complex emotion and story through image alone.',
+      why_selected: 'His work is the gold standard for visual storytelling and character — every image asks a question without words.',
+      youtube_search: 'Shaun Tan visual storytelling illustration process',
+      lessons: [
+        'How environment and setting reveal character without dialogue',
+        'How silhouette and body language communicate emotional state instantly',
+        'How a single image can contain an entire narrative arc',
+      ],
+      study_challenge: 'Create a 3-panel wordless story this week featuring one character. No text, no dialogue — the images must do all the work.',
+    },
   },
 ]
 
