@@ -1,7 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
 import { getFocusForMonth } from '@/lib/curriculum'
-import { DashboardClient } from './DashboardClient'
-
 const DEMO_PROFILE: Record<string, string | number> = {
   id: 'demo',
   artist_name: 'Demo Artist',
