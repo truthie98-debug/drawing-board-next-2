@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase-server'
-import { DashboardClient } from './DashboardClient'
 import { getFocusForMonth } from '@/lib/curriculum'
 
 const DEMO_PROFILE = {
