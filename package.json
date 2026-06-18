@@ -15,7 +15,7 @@
     "@supabase/supabase-js": "^2.43.1",
     "@supabase/ssr": "^0.3.0",
     "ai": "^3.1.22",
-    "@anthropic-ai/sdk": "^0.21.1"
+    "@anthropic-ai/sdk": "^0.39.0"
   },
   "devDependencies": {
     "typescript": "^5",
