@@ -11,7 +11,6 @@ const NAV_LINKS = [
   { href: '/academy', label: 'Academy' },
   { href: '/assignments', label: 'Assignments' },
   { href: '/uploads', label: 'Uploads' },
-  { href: '/opportunities', label: 'Opportunities' },
   { href: '/profile', label: 'Profile' },
 ]
 
