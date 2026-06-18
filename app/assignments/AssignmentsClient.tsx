@@ -106,7 +106,6 @@ export function AssignmentsClient({
   }
 
   const artist = focus.artist
-
   return (
     <div className="max-w-[1100px] mx-auto px-8 py-11 pb-16">
       <p className="eyebrow">Study</p>
@@ -115,7 +114,6 @@ export function AssignmentsClient({
       </h1>
       <p className="text-muted max-w-lg mb-8">{focus.note}</p>
 
-      {/* Artist of the Week — loads instantly */}
       <div className="card mb-5">
         <p className="eyebrow mb-4">Artist of the Week</p>
         <div className="flex items-start justify-between gap-6 mb-5">
@@ -148,7 +146,6 @@ export function AssignmentsClient({
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-1 mb-5 border-b border-line">
         {(['daily', 'weekly', 'capstone'] as const).map(tab => (
           <button
@@ -163,7 +160,6 @@ export function AssignmentsClient({
         ))}
       </div>
 
-      {/* Daily Tab */}
       {activeTab === 'daily' && (
         <>
           <div className="card mb-5">
@@ -178,9 +174,7 @@ export function AssignmentsClient({
                 Different exercise
               </button>
             </div>
-
             <p className="font-serif text-2xl font-normal leading-snug mb-6">{dailyExercise}</p>
-
             {loading ? <Skeleton /> : daily ? (
               <div className="space-y-4 mb-6">
                 <div>
@@ -214,7 +208,6 @@ export function AssignmentsClient({
                 </div>
               </div>
             ) : null}
-
             <div className="flex gap-2 flex-wrap">
               {!completed ? (
                 <button onClick={markComplete} className="btn btn-primary btn-sm">Mark complete</button>
@@ -226,7 +219,6 @@ export function AssignmentsClient({
               <p className="text-sm text-muted mt-4 italic">{daily.encouragement}</p>
             )}
           </div>
-
           <div className="card mb-5">
             <p className="eyebrow mb-2">After Your Study</p>
             {daily && (
@@ -255,7 +247,6 @@ export function AssignmentsClient({
         </>
       )}
 
-      {/* Weekly Tab */}
       {activeTab === 'weekly' && (
         <div className="card mb-5">
           <p className="eyebrow mb-2">Weekly Assignment</p>
@@ -267,7 +258,6 @@ export function AssignmentsClient({
         </div>
       )}
 
-      {/* Capstone Tab */}
       {activeTab === 'capstone' && (
         <div className="card mb-5">
           <p className="eyebrow mb-2">Monthly Capstone</p>
@@ -275,7 +265,7 @@ export function AssignmentsClient({
             {focus.primary} + {focus.secondary}
           </p>
           <p className="text-sm text-muted leading-relaxed">
-            This month's capstone combines both fundamentals into one finished piece. 
+            This month's capstone combines both fundamentals into one finished piece.
             Your work should demonstrate clear {focus.primary.toLowerCase()} and intentional {focus.secondary.toLowerCase()}.
             Upload your final piece plus at least two process studies showing your development.
           </p>
