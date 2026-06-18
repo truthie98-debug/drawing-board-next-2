@@ -1,12 +1,38 @@
 import { createClient } from '@/lib/supabase-server'
-import { redirect } from 'next/navigation'
 import { DashboardClient } from './DashboardClient'
 import { getFocusForMonth } from '@/lib/curriculum'
+
+const DEMO_PROFILE = {
+  id: 'demo',
+  artist_name: 'Demo Artist',
+  current_month: 3,
+  avatar_url: null,
+  bio: 'Exploring figure drawing and expressive mark-making.',
+}
+
+const DEMO_STREAKS = Array.from({ length: 18 }, (_, i) => {
+  const d = new Date()
+  d.setDate(d.getDate() - i)
+  return { date: d.toISOString().split('T')[0], user_id: 'demo' }
+})
 
 export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth')
+
+  if (!user) {
+    const focus = getFocusForMonth(DEMO_PROFILE.current_month)
+    const today = new Date().toISOString().split('T')[0]
+    return (
+      <DashboardClient
+        profile={DEMO_PROFILE}
+        focus={focus}
+        streaks={DEMO_STREAKS}
+        activeStreak={18}
+        today={today}
+      />
+    )
+  }
 
   const { data: profile } = await supabase
     .from('profiles')
@@ -14,7 +40,19 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single()
 
-  if (!profile?.artist_name) redirect('/onboarding')
+  if (!profile?.artist_name) {
+    const focus = getFocusForMonth(1)
+    const today = new Date().toISOString().split('T')[0]
+    return (
+      <DashboardClient
+        profile={{ ...DEMO_PROFILE, id: user.id }}
+        focus={focus}
+        streaks={[]}
+        activeStreak={0}
+        today={today}
+      />
+    )
+  }
 
   const { data: streaks } = await supabase
     .from('streaks')
@@ -24,9 +62,8 @@ export default async function DashboardPage() {
     .limit(31)
 
   const focus = getFocusForMonth(profile.current_month || 1)
-
-  // Calculate streak count
   const today = new Date().toISOString().split('T')[0]
+
   let activeStreakCount = 0
   const sortedDates = (streaks || []).map(s => s.date).sort().reverse()
   for (let i = 0; i < sortedDates.length; i++) {
