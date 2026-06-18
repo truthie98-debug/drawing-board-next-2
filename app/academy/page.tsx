@@ -1,11 +1,9 @@
 import { createClient } from '@/lib/supabase-server'
-import { redirect } from 'next/navigation'
 import { COURSES } from '@/lib/curriculum'
 
 export default async function AcademyPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth')
 
   return (
     <div className="max-w-[1100px] mx-auto px-8 py-11 pb-16">
@@ -14,7 +12,6 @@ export default async function AcademyPage() {
       <p className="text-muted max-w-lg mb-8">
         Ten structured courses. Each one builds on the last. Your 12-month curriculum draws from these to match your current weaknesses.
       </p>
-
       <div className="grid grid-cols-3 gap-4">
         {COURSES.map((course, i) => (
           <article key={course.id} className="card flex flex-col justify-between min-h-[210px] hover:-translate-y-px hover:border-accent/30 transition-all">
