@@ -2,18 +2,20 @@ import { createClient } from '@/lib/supabase-server'
 import { getFocusForMonth } from '@/lib/curriculum'
 import { DashboardClient } from './DashboardClient'
 
-const DEMO_PROFILE = {
+const DEMO_PROFILE: Record<string, string | number> = {
   id: 'demo',
   artist_name: 'Demo Artist',
   current_month: 3,
   avatar_url: '',
   bio: 'Exploring figure drawing and expressive mark-making.',
+  strengths: 'Gesture, line quality, observation',
+  weaknesses: 'Values, cast shadow edges',
 }
 
-const DEMO_STREAKS = Array.from({ length: 18 }, (_, i) => {
+const DEMO_STREAKS: { date: string; completed_active: boolean }[] = Array.from({ length: 18 }, (_, i) => {
   const d = new Date()
   d.setDate(d.getDate() - i)
-  return { date: d.toISOString().split('T')[0], user_id: 'demo' }
+  return { date: d.toISOString().split('T')[0], completed_active: true }
 })
 
 export default async function DashboardPage() {
@@ -21,7 +23,7 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    const focus = getFocusForMonth(DEMO_PROFILE.current_month)
+    const focus = getFocusForMonth(3)
     const today = new Date().toISOString().split('T')[0]
     return (
       <DashboardClient
@@ -65,7 +67,7 @@ export default async function DashboardPage() {
   const today = new Date().toISOString().split('T')[0]
 
   let activeStreakCount = 0
-  const sortedDates = (streaks || []).map(s => s.date).sort().reverse()
+  const sortedDates = (streaks || []).map((s: { date: string }) => s.date).sort().reverse()
   for (let i = 0; i < sortedDates.length; i++) {
     const expected = new Date()
     expected.setDate(expected.getDate() - i)
