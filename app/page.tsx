@@ -1,18 +1,20 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase-server'
+import { getTodayFundamental } from '@/lib/exercises'
 
 const SECTIONS = [
-  { num: '01', href: '/dashboard', title: 'Dashboard', desc: 'Calendar, streaks, focus, and teacher feedback' },
-  { num: '02', href: '/academy', title: 'Academy', desc: 'Ten courses, structured lessons, and progress tracking' },
-  { num: '03', href: '/assignments', title: 'Assignments', desc: 'Daily studies, weekly work, and artist reflections' },
+  { num: '01', href: '/dashboard', title: 'Dashboard', desc: 'Calendar, streaks, today\'s focus, and teacher feedback' },
+  { num: '02', href: '/academy', title: 'Academy', desc: 'The 5 core fundamentals and your exercise library' },
+  { num: '03', href: '/assignments', title: 'Assignments', desc: 'Today\'s mission and your daily reflection' },
   { num: '04', href: '/uploads', title: 'Uploads', desc: 'Submit daily studies, weekly assignments, and finished work' },
   { num: '05', href: '/opportunities', title: 'Opportunities', desc: 'Open calls, exhibitions, grants, and residencies' },
-  { num: '06', href: '/profile', title: 'Profile', desc: 'Curriculum progress, monthly review, and settings' },
+  { num: '06', href: '/profile', title: 'Profile', desc: 'Progress, monthly review, and settings' },
 ]
 
 export default async function Home() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  const todayFundamental = getTodayFundamental()
 
   return (
     <div className="max-w-[1100px] mx-auto px-8">
@@ -44,13 +46,13 @@ export default async function Home() {
       {/* Today card */}
       <div className="card flex items-center justify-between gap-8 max-w-[860px] mx-auto mb-7 px-10 py-8">
         <div>
-          <p className="eyebrow">Today's Work</p>
-          <h2 className="font-serif text-4xl font-normal tracking-tight mb-1.5">Figure Gesture</h2>
-          <p className="text-muted text-sm">30 minutes · One clear focus · One useful result</p>
+          <p className="eyebrow">Today's Fundamental</p>
+          <h2 className="font-serif text-4xl font-normal tracking-tight mb-1.5">{todayFundamental.name}</h2>
+          <p className="text-muted text-sm">{todayFundamental.tagline}</p>
         </div>
-        <div className="w-20 h-20 rounded-full border-[6px] border-gold grid place-items-center font-semibold text-xl font-serif shrink-0">
-          72%
-        </div>
+        <Link href="/assignments" className="btn btn-primary btn-md shrink-0">
+          Start
+        </Link>
       </div>
 
       {/* Section grid */}
