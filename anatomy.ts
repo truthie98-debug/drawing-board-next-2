@@ -1,0 +1,363 @@
+import type { Exercise, Fundamental } from './figure-drawing'
+
+const anatomy: Exercise[] = [
+  {
+    id: 'ana-01',
+    title: 'Draw 10 Hands',
+    goal: 'Build comfort with one of the hardest parts of the body to draw.',
+    how: [
+      'Find or use your own hand in 10 different positions.',
+      'Spend 3 minutes per hand.',
+      'Start each with a simple box-and-wedge shape before details.',
+    ],
+    review: 'Which hand position was hardest? What made it difficult?',
+  },
+  {
+    id: 'ana-02',
+    title: 'Draw 10 Feet',
+    goal: 'Practice the often-skipped but essential study of feet.',
+    how: [
+      'Find 10 foot references from different angles.',
+      'Spend 3 minutes per foot.',
+      'Block in the foot as a wedge shape before adding toes.',
+    ],
+    review: 'Did the wedge shape make the foot easier to construct?',
+  },
+  {
+    id: 'ana-03',
+    title: 'Draw 5 Arms',
+    goal: 'Understand how the arm bends and twists from shoulder to wrist.',
+    how: [
+      'Find 5 arm references in different bent positions.',
+      'Use two cylinders for the upper and lower arm.',
+      'Mark the elbow joint clearly on each.',
+    ],
+    review: 'How does the arm change shape from straight to bent?',
+  },
+  {
+    id: 'ana-04',
+    title: 'Draw 5 Legs',
+    goal: 'Practice the structure of the leg from hip to ankle.',
+    how: [
+      'Find 5 leg references in different poses.',
+      'Use two cylinders for thigh and calf.',
+      'Mark the knee joint and note its slight forward bend.',
+    ],
+    review: 'Where does the leg taper most noticeably?',
+  },
+  {
+    id: 'ana-05',
+    title: 'Anatomy Landmarks on 5 Photos',
+    goal: 'Train your eye to spot bony landmarks under the skin.',
+    how: [
+      'Find 5 photos showing visible body landmarks (collarbone, knees, elbows).',
+      'Trace or mark each landmark directly on the photo or a sketch of it.',
+      'Label what each landmark is.',
+    ],
+    review: 'Which landmark was easiest to spot? Hardest?',
+  },
+  {
+    id: 'ana-06',
+    title: 'Skull Basic Forms',
+    goal: 'Understand the skull as the foundation for any head drawing.',
+    how: [
+      'Find a simple skull reference (front or 3/4 view).',
+      'Block it in using a sphere for the cranium and a wedge for the jaw.',
+      'Mark the eye sockets, cheekbones, and chin.',
+    ],
+    review: 'How does the skull shape relate to the proportions of a face?',
+  },
+  {
+    id: 'ana-07',
+    title: 'Ribcage as an Egg',
+    goal: 'Simplify the torso\'s core structure for easier figure construction.',
+    how: [
+      'Find a torso reference, front or side view.',
+      'Draw the ribcage as a simplified egg shape, narrow at top.',
+      'Note how it tilts depending on the pose.',
+    ],
+    review: 'Did simplifying to an egg shape make the torso easier to draw?',
+  },
+  {
+    id: 'ana-08',
+    title: 'Pelvis as a Bowl',
+    goal: 'Understand the pelvis as the base that the legs attach to.',
+    how: [
+      'Find a hip/pelvis reference.',
+      'Draw the pelvis as a simplified bowl or box shape.',
+      'Mark the hip points on each side.',
+    ],
+    review: 'How does the pelvis tilt differ between standing and sitting?',
+  },
+  {
+    id: 'ana-09',
+    title: 'Ribcage-Pelvis Relationship',
+    goal: 'Practice showing how the torso twists between two major masses.',
+    how: [
+      'Find a twisting pose reference.',
+      'Draw the ribcage and pelvis as two separate simple shapes.',
+      'Connect them with a simple spine line showing the twist.',
+    ],
+    review: 'Could you see the twist clearly using just two shapes?',
+  },
+  {
+    id: 'ana-10',
+    title: 'Shoulder Construction',
+    goal: 'Understand how the shoulder connects arm to torso believably.',
+    how: [
+      'Find a reference showing a raised or extended arm.',
+      'Draw the shoulder as a ball joint connecting torso and arm.',
+      'Note how the deltoid wraps around this joint.',
+    ],
+    review: 'Did the ball-joint approach help the shoulder feel connected?',
+  },
+  {
+    id: 'ana-11',
+    title: 'Elbow and Knee Study',
+    goal: 'Practice the two most commonly misdrawn joints.',
+    how: [
+      'Find 3 references showing bent elbows and knees.',
+      'Draw each joint focusing on the angular change in direction.',
+      'Note the slight bony point at each joint.',
+    ],
+    review: 'What shape best describes a bent elbow? A bent knee?',
+  },
+  {
+    id: 'ana-12',
+    title: 'Hand: Box and Wedge Method',
+    goal: 'Learn a repeatable construction method for any hand pose.',
+    how: [
+      'Draw a simple box for the palm.',
+      'Add a wedge shape for the thumb coming off the side.',
+      'Add four cylindrical fingers extending from the box.',
+    ],
+    review: 'Does this method work for a fist? An open hand? Try both.',
+  },
+  {
+    id: 'ana-13',
+    title: 'Foot: Wedge Method',
+    goal: 'Learn a repeatable construction method for any foot angle.',
+    how: [
+      'Draw a wedge shape for the overall foot form.',
+      'Narrow the front of the wedge slightly for the toes.',
+      'Add a small box at the back for the heel.',
+    ],
+    review: 'Did the wedge method work from multiple angles?',
+  },
+  {
+    id: 'ana-14',
+    title: '5 Facial Landmark Studies',
+    goal: 'Practice placing facial features using proportion guides.',
+    how: [
+      'Find 5 face references, front view.',
+      'Draw a center line and divide the face into thirds (hairline, brow, nose, chin).',
+      'Place eyes, nose, and mouth using those divisions.',
+    ],
+    review: 'Did the thirds guide make feature placement easier?',
+  },
+  {
+    id: 'ana-15',
+    title: 'Muscle Groups: Arm',
+    goal: 'Identify the major visible muscle masses of the arm.',
+    how: [
+      'Find a reference of a flexed or visible arm.',
+      'Identify and lightly shade the bicep, tricep, and forearm masses.',
+      'Don\'t worry about exact anatomy — focus on the big shapes.',
+    ],
+    review: 'Which muscle mass was most visible in your reference?',
+  },
+  {
+    id: 'ana-16',
+    title: 'Muscle Groups: Leg',
+    goal: 'Identify the major visible muscle masses of the leg.',
+    how: [
+      'Find a reference of a leg, ideally flexed or in motion.',
+      'Identify and lightly shade the quad, hamstring, and calf masses.',
+      'Focus on the big shapes rather than precise anatomy.',
+    ],
+    review: 'How did the muscle shapes change between standing and walking?',
+  },
+  {
+    id: 'ana-17',
+    title: 'Spine Curve Study',
+    goal: 'Understand the natural S-curve of the spine and its role in posture.',
+    how: [
+      'Find 3 side-view pose references.',
+      'Trace the curve of the spine on each — neck, upper back, lower back.',
+      'Note how the curve changes between relaxed and tense poses.',
+    ],
+    review: 'Did the spine curve more in relaxed or tense poses?',
+  },
+  {
+    id: 'ana-18',
+    title: 'Neck and Trapezius Study',
+    goal: 'Understand how the neck connects to the shoulders.',
+    how: [
+      'Find a reference showing the neck and shoulder area clearly.',
+      'Draw the neck as a simple cylinder.',
+      'Show how the trapezius muscle slopes from neck to shoulder.',
+    ],
+    review: 'Did the neck connect believably to the shoulders in your drawing?',
+  },
+  {
+    id: 'ana-19',
+    title: 'Foreshortened Hand Study',
+    goal: 'Tackle the hand pointing toward the viewer — a common challenge.',
+    how: [
+      'Find a reference of a hand pointing or reaching toward camera.',
+      'Use overlapping circles for each finger segment.',
+      'Focus on which parts overlap and which recede.',
+    ],
+    review: 'What helped the foreshortened hand read correctly?',
+  },
+  {
+    id: 'ana-20',
+    title: 'Bare Feet from 3 Angles',
+    goal: 'Build a complete understanding of foot structure.',
+    how: [
+      'Find or pose your own foot from the top, side, and front.',
+      'Draw all three using the wedge method.',
+      'Compare how the silhouette changes by angle.',
+    ],
+    review: 'Which foot angle was most different from what you expected?',
+  },
+  {
+    id: 'ana-21',
+    title: 'Jaw and Chin Construction',
+    goal: 'Practice the structure that defines facial silhouette.',
+    how: [
+      'Find 3 face references with visible jaw lines.',
+      'Draw the jaw as a simple wedge attached to the skull sphere.',
+      'Note how jaw shape varies between references.',
+    ],
+    review: 'How did jaw shape change the overall character of the face?',
+  },
+  {
+    id: 'ana-22',
+    title: 'Ear Construction Study',
+    goal: 'Learn the basic structure of an often-rushed feature.',
+    how: [
+      'Find 3 ear references.',
+      'Block each in as a simple C-shape with an inner Y-shape.',
+      'Note where the ear sits relative to the eyebrow and nose base.',
+    ],
+    review: 'Where did the ear line up relative to the eyes and nose?',
+  },
+  {
+    id: 'ana-23',
+    title: 'Nose Construction Study',
+    goal: 'Practice building the nose from simple 3D forms.',
+    how: [
+      'Find 3 nose references from different angles.',
+      'Build the nose using a wedge for the bridge and a ball for the tip.',
+      'Add the nostril wings as small attached shapes.',
+    ],
+    review: 'Did the simple forms help the nose feel three-dimensional?',
+  },
+  {
+    id: 'ana-24',
+    title: 'Torso Twist with Ribcage and Hips',
+    goal: 'Combine ribcage and pelvis knowledge into one dynamic study.',
+    how: [
+      'Find a reference with a strong torso twist.',
+      'Block the ribcage and pelvis as separate simple shapes.',
+      'Connect with a spine line and add simplified limbs.',
+    ],
+    review: 'Did your simplified blocks capture the twist accurately?',
+  },
+  {
+    id: 'ana-25',
+    title: 'Hand Gesture Set',
+    goal: 'Practice quick, loose hand gestures the way you would figure gestures.',
+    how: [
+      'Find 6 hand pose references.',
+      'Give each hand 90 seconds.',
+      'Focus on the overall gesture and weight, not individual fingers.',
+    ],
+    review: 'Did treating hands like gesture poses speed up your process?',
+  },
+  {
+    id: 'ana-26',
+    title: 'Standing Skeleton Sketch',
+    goal: 'Build a basic mental map of the full skeleton in a simple pose.',
+    how: [
+      'Find a simple standing pose reference.',
+      'Sketch a simplified skeleton: skull, spine, ribcage, pelvis, limb bones.',
+      'Don\'t aim for medical accuracy — aim for believable proportion.',
+    ],
+    review: 'Did sketching the skeleton change how you saw the pose?',
+  },
+  {
+    id: 'ana-27',
+    title: 'Wrist and Ankle Study',
+    goal: 'Understand the smaller joints that connect limbs to hands and feet.',
+    how: [
+      'Find references showing a bent wrist and a flexed ankle.',
+      'Draw each joint, noting the narrowing before the hand or foot begins.',
+      'Compare the wrist\'s flexibility to the ankle\'s more limited range.',
+    ],
+    review: 'Which joint had more range of motion in your reference?',
+  },
+  {
+    id: 'ana-28',
+    title: 'Face from 3 Angles',
+    goal: 'Build comfort drawing the same face from front, 3/4, and profile.',
+    how: [
+      'Pick one face reference or imagine one consistent face.',
+      'Draw it from the front using the thirds method.',
+      'Draw the same face from a 3/4 angle and a profile.',
+    ],
+    review: 'Which angle was hardest to keep consistent?',
+  },
+  {
+    id: 'ana-29',
+    title: 'Hand Holding Object',
+    goal: 'Practice a hand interacting with something — a common illustration need.',
+    how: [
+      'Find a reference of a hand holding an object (cup, pencil, phone).',
+      'Block the hand first, then add the object inside the grip.',
+      'Check that fingers wrap believably around the form.',
+    ],
+    review: 'Did the object feel like it was actually being held?',
+  },
+  {
+    id: 'ana-30',
+    title: 'Aging Study: Young vs Old Hands',
+    goal: 'Observe how anatomy changes across age in a single body part.',
+    how: [
+      'Find one reference of a young hand and one of an older hand.',
+      'Draw both side by side.',
+      'Note differences in proportion, skin, and joint visibility.',
+    ],
+    review: 'What were the clearest differences between the two hands?',
+  },
+  {
+    id: 'ana-31',
+    title: 'Full Body Landmark Map',
+    goal: 'Combine everything into one full-figure landmark study.',
+    how: [
+      'Find one full standing figure reference.',
+      'Mark every major landmark: collarbone, ribcage, hips, elbows, knees, ankles.',
+      'Label each one as you go.',
+    ],
+    review: 'Could you complete the map without checking a reference for landmarks?',
+  },
+  {
+    id: 'ana-32',
+    title: 'Anatomy Speed Round',
+    goal: 'Test recall of body part construction methods under time pressure.',
+    how: [
+      'Set a timer for 12 minutes.',
+      'Draw one hand, one foot, one elbow, and one knee — from memory.',
+      'Use the construction methods you\'ve practiced (box, wedge, cylinder).',
+    ],
+    review: 'Which body part came most naturally from memory?',
+  },
+]
+
+export const ANATOMY: Fundamental = {
+  id: 'anatomy',
+  name: 'Anatomy',
+  tagline: 'Hands, feet, landmarks, and the structure beneath the surface.',
+  exercises: anatomy,
+}
