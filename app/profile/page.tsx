@@ -1,56 +1,33 @@
 import { createClient } from '@/lib/supabase-server'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { getFocusForMonth } from '@/lib/curriculum'
-
-const DEMO_PROFILE = {
-  id: 'demo',
-  artist_name: 'Demo Artist',
-  current_month: 3,
-  skill_level: 'Intermediate',
-  medium: 'Graphite & Charcoal',
-  daily_time: '45 minutes',
-  strengths: 'Gesture, line quality, observation',
-  weaknesses: 'Values, cast shadow edges',
-  short_goals: 'Complete a finished figure drawing',
-  professional_goals: 'Build a portfolio for gallery submission',
-  favorite_artists: 'Sargent, Fechin, Zorn',
-}
+import { getTodayFundamental } from '@/lib/exercises'
 
 export default async function ProfilePage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/auth')
 
-  let profile = DEMO_PROFILE
-  let submissionCount = 12
-  let streakCount = 18
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
 
-  if (user) {
-    const { data: dbProfile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single()
+  if (!profile?.artist_name) redirect('/onboarding')
 
-    if (dbProfile?.artist_name) {
-      profile = dbProfile
+  const { count: submissionCount } = await supabase
+    .from('submissions')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
 
-      const { count: sc } = await supabase
-        .from('submissions')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
+  const { count: streakCount } = await supabase
+    .from('streaks')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('completed_active', true)
 
-      const { count: stc } = await supabase
-        .from('streaks')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .eq('completed_active', true)
-
-      submissionCount = sc || 0
-      streakCount = stc || 0
-    }
-  }
-
-  const focus = getFocusForMonth(profile.current_month || 1)
+  const todayFundamental = getTodayFundamental()
   const initials = (profile.artist_name || 'A')
     .split(' ')
     .map((w: string) => w[0])
@@ -58,11 +35,11 @@ export default async function ProfilePage() {
     .toUpperCase()
     .slice(0, 2)
 
-  const reviewNote = `Your ${focus.primary.toLowerCase()} work has developed real confidence. ${
+  const reviewNote = `Your consistency is showing. ${
     profile.weaknesses
       ? `${profile.weaknesses.split(',')[0].trim()} still needs deliberate attention.`
-      : 'Keep the same submission rhythm.'
-  } Next month: advance difficulty on your strongest fundamental and introduce the next pairing.`
+      : 'Keep the same practice rhythm.'
+  } The rotation through all 5 fundamentals keeps your skills balanced rather than overdeveloped in one area.`
 
   return (
     <div className="max-w-[1100px] mx-auto px-8 py-11 pb-16">
@@ -70,6 +47,7 @@ export default async function ProfilePage() {
       <h1 className="font-serif text-5xl font-normal tracking-tight leading-none mb-8">{profile.artist_name}</h1>
 
       <div className="grid grid-cols-[1fr_2fr] gap-6">
+        {/* Aside */}
         <div className="flex flex-col gap-4">
           <div className="card-sm card text-center">
             <div className="w-24 h-24 rounded-full bg-accent/10 grid place-items-center font-serif text-4xl font-normal text-accent mx-auto mb-3">
@@ -80,11 +58,11 @@ export default async function ProfilePage() {
           </div>
 
           <div className="card-sm card">
-            <p className="eyebrow mb-3">Curriculum</p>
+            <p className="eyebrow mb-3">Practice</p>
             {[
-              { label: 'Month', value: `${profile.current_month || 1} of 12` },
-              { label: 'Assignments done', value: String(submissionCount) },
-              { label: 'Active study days', value: String(streakCount) },
+              { label: 'Today\'s fundamental', value: todayFundamental.name },
+              { label: 'Studies completed', value: String(submissionCount || 0) },
+              { label: 'Active study days', value: String(streakCount || 0) },
               { label: 'Daily time', value: profile.daily_time || '30 minutes' },
             ].map(row => (
               <div key={row.label} className="flex justify-between py-2.5 border-b border-line last:border-0 text-sm">
@@ -99,6 +77,7 @@ export default async function ProfilePage() {
           </Link>
         </div>
 
+        {/* Main */}
         <div className="flex flex-col gap-5">
           <div className="card">
             <p className="eyebrow mb-4">Monthly Review</p>
@@ -108,7 +87,7 @@ export default async function ProfilePage() {
               </div>
               <div>
                 <p className="font-semibold">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
-                <p className="text-xs text-muted">Consistent work with clear improvement in {focus.primary.toLowerCase()}</p>
+                <p className="text-xs text-muted">Consistent practice across all 5 fundamentals</p>
               </div>
             </div>
             <div className="teacher-block">{reviewNote}</div>
