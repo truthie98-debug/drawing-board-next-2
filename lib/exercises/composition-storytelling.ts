@@ -1,0 +1,363 @@
+import type { Exercise, Fundamental } from './figure-drawing'
+
+const compositionStorytelling: Exercise[] = [
+  {
+    id: 'cs-01',
+    title: 'Draw 10 Thumbnails',
+    goal: 'Generate fast, rough composition ideas without overthinking.',
+    how: [
+      'Draw 10 small rectangles, about playing-card size.',
+      'In each, sketch a different rough composition idea for the same subject.',
+      'Spend no more than 90 seconds per thumbnail.',
+    ],
+    review: 'Which thumbnail had the strongest sense of focal point?',
+  },
+  {
+    id: 'cs-02',
+    title: 'Create 5 Silhouette Compositions',
+    goal: 'Test whether a composition reads clearly using only shape and value.',
+    how: [
+      'Draw 5 small compositions using only solid black shapes.',
+      'No internal detail or line work — silhouettes only.',
+      'Check that the focal point is clear from shape alone.',
+    ],
+    review: 'Which silhouette composition was the most readable?',
+  },
+  {
+    id: 'cs-03',
+    title: 'Design a Movie Poster Concept',
+    goal: 'Practice composition that needs to communicate instantly.',
+    how: [
+      'Pick a story idea — yours or a favorite film.',
+      'Sketch one composition that captures its core mood in a single image.',
+      'Think about where the title and key image would sit.',
+    ],
+    review: 'Does the composition tell you what kind of story this is?',
+  },
+  {
+    id: 'cs-04',
+    title: 'Tell a Story with One Object',
+    goal: 'Practice using a single element to imply a larger narrative.',
+    how: [
+      'Choose one ordinary object (a shoe, a letter, a broken cup).',
+      'Place it in a simple scene that suggests what happened before.',
+      'Use only the object and its surroundings — no figures needed.',
+    ],
+    review: 'What story did the object and its placement suggest?',
+  },
+  {
+    id: 'cs-05',
+    title: 'Create 5 Focal-Point Studies',
+    goal: 'Practice directing the eye to one clear place in an image.',
+    how: [
+      'Draw 5 small compositions with the same basic elements.',
+      'In each, use a different technique to create the focal point (contrast, size, framing, leading lines, isolation).',
+      'Compare which technique worked best.',
+    ],
+    review: 'Which focal-point technique felt strongest?',
+  },
+  {
+    id: 'cs-06',
+    title: 'Rule of Thirds Practice',
+    goal: 'Apply a classic, reliable composition guideline.',
+    how: [
+      'Draw a rectangle and divide it into a 3x3 grid.',
+      'Place your main subject on one of the four intersection points.',
+      'Sketch a simple scene around that placement.',
+    ],
+    review: 'Did the off-center placement feel more dynamic than centering it?',
+  },
+  {
+    id: 'cs-07',
+    title: 'Leading Lines Study',
+    goal: 'Practice using lines within a scene to guide the viewer\'s eye.',
+    how: [
+      'Sketch a simple scene with a road, river, or fence.',
+      'Use that line to lead the eye toward your main subject.',
+      'Check that the line doesn\'t lead the eye out of the frame instead.',
+    ],
+    review: 'Did the leading line successfully guide your eye to the subject?',
+  },
+  {
+    id: 'cs-08',
+    title: 'Framing Within the Frame',
+    goal: 'Practice using elements inside the image to frame the subject.',
+    how: [
+      'Sketch a simple scene with a doorway, window, or archway.',
+      'Place your main subject so it\'s framed by that element.',
+      'Notice how the frame draws extra attention to the subject.',
+    ],
+    review: 'Did the internal frame make the subject feel more important?',
+  },
+  {
+    id: 'cs-09',
+    title: 'Asymmetrical Balance Study',
+    goal: 'Practice balancing a composition without symmetry.',
+    how: [
+      'Sketch one large shape on one side of the composition.',
+      'Balance it with several smaller shapes or a contrasting empty space on the other side.',
+      'Check that the composition still feels stable.',
+    ],
+    review: 'Did the composition feel balanced despite being asymmetrical?',
+  },
+  {
+    id: 'cs-10',
+    title: 'Symmetrical Composition Study',
+    goal: 'Practice the deliberate stillness and formality of symmetry.',
+    how: [
+      'Sketch a scene that mirrors itself left to right.',
+      'Place the main subject directly in the center.',
+      'Notice the mood this creates compared to asymmetry.',
+    ],
+    review: 'Did symmetry feel calm, formal, or unsettling? Why?',
+  },
+  {
+    id: 'cs-11',
+    title: 'Negative Space Composition',
+    goal: 'Practice using empty space as an active compositional choice.',
+    how: [
+      'Sketch one small subject placed in a large, mostly empty frame.',
+      'Consider where the empty space pulls the viewer\'s attention.',
+      'Adjust the subject\'s placement until the negative space feels intentional.',
+    ],
+    review: 'What did the empty space communicate about the subject?',
+  },
+  {
+    id: 'cs-12',
+    title: 'High Contrast Focal Point',
+    goal: 'Practice using value contrast to instantly draw the eye.',
+    how: [
+      'Sketch a simple scene mostly in mid-tones.',
+      'Place one small area of high contrast (very light or very dark) at your focal point.',
+      'Check that your eye goes there first.',
+    ],
+    review: 'Did the contrast successfully pull your eye to that spot first?',
+  },
+  {
+    id: 'cs-13',
+    title: 'Triangle Composition Study',
+    goal: 'Practice a classic stable compositional structure.',
+    how: [
+      'Sketch a scene where the major elements form a triangle shape.',
+      'Place your most important element at one of the triangle\'s points.',
+      'Notice the visual stability this creates.',
+    ],
+    review: 'Did the triangle shape make the composition feel more grounded?',
+  },
+  {
+    id: 'cs-14',
+    title: 'Diagonal Composition Study',
+    goal: 'Practice using diagonal lines to create energy and movement.',
+    how: [
+      'Sketch a scene where the main compositional line runs diagonally across the frame.',
+      'Place your subject along or interacting with that diagonal.',
+      'Compare the energy to a horizontal or vertical composition.',
+    ],
+    review: 'Did the diagonal line add a sense of motion or tension?',
+  },
+  {
+    id: 'cs-15',
+    title: 'One Scene, Two Crops',
+    goal: 'Practice how cropping changes a story without changing the content.',
+    how: [
+      'Sketch one full scene with a figure and environment.',
+      'Crop it tightly around just the figure\'s face or hands.',
+      'Compare how the story or feeling changes between the two crops.',
+    ],
+    review: 'Which crop told a more interesting or specific story?',
+  },
+  {
+    id: 'cs-16',
+    title: 'Before and After Storytelling',
+    goal: 'Practice implying a sequence of events in a single image.',
+    how: [
+      'Choose a simple event (a glass breaking, a race finishing).',
+      'Sketch one image that implies it just happened or is about to happen.',
+      'Use clues in the scene rather than depicting the event directly.',
+    ],
+    review: 'What specific clue made the implied moment clear?',
+  },
+  {
+    id: 'cs-17',
+    title: 'Scale Contrast Storytelling',
+    goal: 'Practice using size relationships to create drama or meaning.',
+    how: [
+      'Sketch one large element and one small element in the same scene.',
+      'Use the size difference to suggest power, danger, or vulnerability.',
+      'Keep the composition simple — just two or three shapes.',
+    ],
+    review: 'What feeling did the size contrast create?',
+  },
+  {
+    id: 'cs-18',
+    title: 'Color Block Thumbnail Set',
+    goal: 'Practice composition using only flat color shapes, no line.',
+    how: [
+      'Sketch 5 thumbnails using only 3-4 flat color shapes each.',
+      'No outlines, no detail — pure shape and color composition.',
+      'Check that each thumbnail still reads clearly.',
+    ],
+    review: 'Could you tell what was happening using only color shapes?',
+  },
+  {
+    id: 'cs-19',
+    title: 'Establishing Shot Practice',
+    goal: 'Practice the kind of wide composition that sets a scene.',
+    how: [
+      'Imagine the opening shot of a story.',
+      'Sketch a wide environment that establishes location, time, and mood.',
+      'Include a small figure or object for scale.',
+    ],
+    review: 'Does the image clearly establish where and when the story takes place?',
+  },
+  {
+    id: 'cs-20',
+    title: 'Close-Up Emotional Shot',
+    goal: 'Practice the opposite of an establishing shot — tight, emotional focus.',
+    how: [
+      'Choose one character or subject.',
+      'Sketch a tightly cropped composition focusing on one expressive detail (eyes, hands).',
+      'Strip away all unnecessary background.',
+    ],
+    review: 'Did the tight crop intensify the emotional read?',
+  },
+  {
+    id: 'cs-21',
+    title: 'Repetition and Pattern Composition',
+    goal: 'Practice using repeated elements to create rhythm in a scene.',
+    how: [
+      'Sketch a scene with one repeated element (windows, trees, figures).',
+      'Break the pattern with one different element to create a focal point.',
+      'Notice how the break in the pattern draws the eye.',
+    ],
+    review: 'Did the broken pattern element stand out clearly?',
+  },
+  {
+    id: 'cs-22',
+    title: 'Silhouette Storytelling',
+    goal: 'Practice telling a story using only character silhouettes.',
+    how: [
+      'Sketch 2-3 silhouettes that interact or suggest a relationship.',
+      'No detail — pose and placement only.',
+      'Check if a viewer could guess the story from shapes alone.',
+    ],
+    review: 'What story did the silhouettes suggest without any detail?',
+  },
+  {
+    id: 'cs-23',
+    title: 'One Subject, 5 Compositions',
+    goal: 'Practice generating composition variety from a single fixed idea.',
+    how: [
+      'Choose one simple subject (a figure, an object).',
+      'Sketch 5 different compositions using that same subject.',
+      'Vary placement, scale, and framing each time.',
+    ],
+    review: 'Which of the 5 compositions felt the most compelling?',
+  },
+  {
+    id: 'cs-24',
+    title: 'Implied Motion Composition',
+    goal: 'Practice suggesting movement within a single still image.',
+    how: [
+      'Sketch a subject in motion (running, falling, flying).',
+      'Use diagonal lines, motion blur marks, or trailing shapes to suggest speed.',
+      'Keep the composition simple and focused.',
+    ],
+    review: 'Did the image successfully suggest movement, not just a static pose?',
+  },
+  {
+    id: 'cs-25',
+    title: 'Two-Character Power Dynamic',
+    goal: 'Practice using composition to show a relationship between two figures.',
+    how: [
+      'Sketch two figures in the same scene.',
+      'Use height, placement, and space to suggest who has more power or control.',
+      'Avoid relying on facial expression alone.',
+    ],
+    review: 'How did placement alone suggest the power dynamic?',
+  },
+  {
+    id: 'cs-26',
+    title: 'Environment as Character',
+    goal: 'Practice using setting to communicate mood and story.',
+    how: [
+      'Sketch an environment with no figures present at all.',
+      'Use lighting, clutter or emptiness, and detail choices to suggest who might live there.',
+      'Aim to make the space feel inhabited by an implied personality.',
+    ],
+    review: 'What did the environment suggest about who lives there?',
+  },
+  {
+    id: 'cs-27',
+    title: 'Visual Weight Balancing',
+    goal: 'Practice distributing visual weight across a composition intentionally.',
+    how: [
+      'Sketch one heavy, detailed element on one side of the frame.',
+      'Balance it using a lighter but more numerous set of elements on the other side.',
+      'Step back and check if the composition feels even.',
+    ],
+    review: 'Did the composition feel balanced once you stepped back?',
+  },
+  {
+    id: 'cs-28',
+    title: 'Single Color Mood Composition',
+    goal: 'Combine color and composition into one focused mood study.',
+    how: [
+      'Choose one mood (lonely, triumphant, tense).',
+      'Sketch a composition and assign it a single dominant color.',
+      'Use composition and color together to reinforce the mood.',
+    ],
+    review: 'Did the composition and color choice reinforce each other?',
+  },
+  {
+    id: 'cs-29',
+    title: 'Sequential Storytelling: 3 Panels',
+    goal: 'Practice basic visual storytelling across multiple images.',
+    how: [
+      'Choose one simple sequence of events (a person finding something, a chase).',
+      'Sketch 3 small panels showing beginning, middle, and end.',
+      'Keep each panel simple — composition and key pose only.',
+    ],
+    review: 'Did the 3 panels clearly communicate the sequence of events?',
+  },
+  {
+    id: 'cs-30',
+    title: 'Mystery Composition',
+    goal: 'Practice composing an image that raises a question rather than answering one.',
+    how: [
+      'Sketch a scene that hints at something without showing it fully.',
+      'Use cropping, shadow, or obscured elements to create curiosity.',
+      'Avoid resolving the mystery within the image.',
+    ],
+    review: 'What question does the image leave the viewer with?',
+  },
+  {
+    id: 'cs-31',
+    title: 'Compositional Cropping Study',
+    goal: 'Practice finding the strongest crop within a larger sketch.',
+    how: [
+      'Sketch one busy, detailed scene.',
+      'Draw a small rectangle frame and move it around the scene.',
+      'Identify and redraw the strongest cropped composition you find.',
+    ],
+    review: 'Was the strongest crop one you expected, or a surprise?',
+  },
+  {
+    id: 'cs-32',
+    title: 'Composition Speed Round',
+    goal: 'Test recall of composition principles under time pressure.',
+    how: [
+      'Set a timer for 12 minutes.',
+      'Sketch 3 thumbnails, each applying a different principle: rule of thirds, leading lines, framing.',
+      'No references — work from what you\'ve already practiced.',
+    ],
+    review: 'Which compositional principle felt most natural to apply quickly?',
+  },
+]
+
+export const COMPOSITION_STORYTELLING: Fundamental = {
+  id: 'composition-storytelling',
+  name: 'Composition & Storytelling',
+  tagline: 'Focal points, framing, and images that communicate at a glance.',
+  exercises: compositionStorytelling,
+}

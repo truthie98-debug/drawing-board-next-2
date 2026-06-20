@@ -1,0 +1,363 @@
+import type { Exercise, Fundamental } from './figure-drawing'
+
+const perspectiveForm: Exercise[] = [
+  {
+    id: 'per-01',
+    title: 'Draw 20 Boxes',
+    goal: 'Build raw repetition and confidence with the most basic 3D form.',
+    how: [
+      'Draw a horizon line and pick one vanishing point.',
+      'Draw 20 small boxes in varying sizes, all using that vanishing point.',
+      'Keep each box under 30 seconds.',
+    ],
+    review: 'Did your boxes get more confident by the 20th one?',
+  },
+  {
+    id: 'per-02',
+    title: 'Draw 10 Cylinders',
+    goal: 'Practice the form that underlies limbs, cups, and countless objects.',
+    how: [
+      'Draw an ellipse for the top of the cylinder.',
+      'Drop two parallel lines down for the sides.',
+      'Close with a second ellipse at the bottom. Repeat 10 times at different angles.',
+    ],
+    review: 'Which ellipse angle was hardest to get right?',
+  },
+  {
+    id: 'per-03',
+    title: '5 Household Objects as Forms',
+    goal: 'Practice seeing real objects as simple underlying shapes.',
+    how: [
+      'Find 5 objects around you (mug, book, lamp, etc).',
+      'For each, identify the basic form: box, cylinder, sphere, or cone.',
+      'Draw each object using only that simplified form.',
+    ],
+    review: 'Which object was hardest to simplify into a basic form?',
+  },
+  {
+    id: 'per-04',
+    title: 'Rotate One Object 4 Times',
+    goal: 'Understand how a single form changes appearance as it rotates.',
+    how: [
+      'Pick one object (a box or mug works well).',
+      'Draw it from the front.',
+      'Rotate it slightly and redraw it 3 more times, tracking the change.',
+    ],
+    review: 'What part of the object changed most as it rotated?',
+  },
+  {
+    id: 'per-05',
+    title: 'Draw a Room Corner',
+    goal: 'Apply perspective to a real architectural space.',
+    how: [
+      'Set a horizon line and one or two vanishing points.',
+      'Draw where two walls meet a floor and ceiling.',
+      'Add one piece of furniture using the same vanishing points.',
+    ],
+    review: 'Did the furniture line up correctly with the room\'s perspective?',
+  },
+  {
+    id: 'per-06',
+    title: '1-Point Perspective Hallway',
+    goal: 'Practice the simplest form of perspective with maximum depth illusion.',
+    how: [
+      'Draw a horizon line and one vanishing point in the center.',
+      'Draw a rectangle hallway opening with lines converging to that point.',
+      'Add 3 doors along the walls using the same convergence.',
+    ],
+    review: 'Did the hallway feel like it had real depth?',
+  },
+  {
+    id: 'per-07',
+    title: '2-Point Perspective Building',
+    goal: 'Practice the perspective system most common in architectural drawing.',
+    how: [
+      'Draw a horizon line with two vanishing points, one on each side.',
+      'Draw a vertical line for the building\'s corner.',
+      'Connect lines from the top and bottom of that corner to both vanishing points.',
+    ],
+    review: 'Which vanishing point felt more natural to work with?',
+  },
+  {
+    id: 'per-08',
+    title: '3-Point Perspective Skyscraper',
+    goal: 'Practice dramatic perspective looking up or down at a tall structure.',
+    how: [
+      'Set two vanishing points on the horizon and one far above or below.',
+      'Draw a tall building using all three points.',
+      'Notice how the verticals now converge too, instead of staying parallel.',
+    ],
+    review: 'Did the third vanishing point make the structure feel taller?',
+  },
+  {
+    id: 'per-09',
+    title: 'Sphere Light Study',
+    goal: 'Understand how light wraps around the simplest 3D form.',
+    how: [
+      'Draw a circle and decide on one light source direction.',
+      'Add a core shadow band, a highlight, and a cast shadow.',
+      'Keep the light direction consistent across all elements.',
+    ],
+    review: 'Did the cast shadow correctly match your light direction?',
+  },
+  {
+    id: 'per-10',
+    title: 'Cube Light Study',
+    goal: 'Practice value changes across the three visible planes of a cube.',
+    how: [
+      'Draw a cube in 2-point perspective.',
+      'Decide on a light source and assign each plane a value: light, mid, dark.',
+      'Add a simple cast shadow on the ground plane.',
+    ],
+    review: 'Which plane was lightest? Which was darkest?',
+  },
+  {
+    id: 'per-11',
+    title: 'Cone and Pyramid Study',
+    goal: 'Practice two angular forms often overlooked compared to boxes and cylinders.',
+    how: [
+      'Draw a cone using a circle base and a peak point.',
+      'Draw a pyramid using a square base and a peak point.',
+      'Add simple shading to each based on one light source.',
+    ],
+    review: 'How did the shading differ between the rounded cone and angular pyramid?',
+  },
+  {
+    id: 'per-12',
+    title: 'Object Pile Perspective',
+    goal: 'Practice multiple objects sharing the same perspective system.',
+    how: [
+      'Set one horizon line and vanishing point.',
+      'Stack or arrange 3 simple objects (boxes, cylinders) in the scene.',
+      'Make sure all objects respect the same vanishing point.',
+    ],
+    review: 'Did all the objects feel like they existed in the same space?',
+  },
+  {
+    id: 'per-13',
+    title: 'Interior Room from Imagination',
+    goal: 'Apply perspective rules without a reference photo.',
+    how: [
+      'Set up a horizon line and 2-point perspective.',
+      'Imagine a simple room — bedroom, kitchen, studio.',
+      'Place 3 pieces of furniture using consistent perspective.',
+    ],
+    review: 'Did imagining the room feel harder than using a reference?',
+  },
+  {
+    id: 'per-14',
+    title: 'Street Corner Study',
+    goal: 'Practice perspective in a more complex, real-world environment.',
+    how: [
+      'Find a street photo reference.',
+      'Identify the horizon line and vanishing point(s) in the photo.',
+      'Sketch the major shapes — buildings, sidewalk — following that perspective.',
+    ],
+    review: 'Was it easy to spot the vanishing point in a real photo?',
+  },
+  {
+    id: 'per-15',
+    title: 'Form Shading: 5 Objects',
+    goal: 'Apply consistent lighting logic across multiple different forms.',
+    how: [
+      'Set up 5 simple forms: sphere, cube, cylinder, cone, and one household object.',
+      'Pick one light source and apply it consistently to all 5.',
+      'Compare how each form catches light differently.',
+    ],
+    review: 'Which form was easiest to light convincingly? Hardest?',
+  },
+  {
+    id: 'per-16',
+    title: 'Eye-Level Exploration',
+    goal: 'Understand how horizon line placement changes a scene\'s feeling.',
+    how: [
+      'Draw the same simple box scene twice.',
+      'First with the horizon line low (worm\'s eye view).',
+      'Then with the horizon line high (bird\'s eye view).',
+    ],
+    review: 'How did the mood of the scene change with horizon placement?',
+  },
+  {
+    id: 'per-17',
+    title: 'Stairs in Perspective',
+    goal: 'Practice a classic perspective challenge — receding steps.',
+    how: [
+      'Set up 1 or 2-point perspective with a horizon line.',
+      'Draw a single step block using your vanishing point(s).',
+      'Repeat the step shape receding into the distance, getting smaller.',
+    ],
+    review: 'Did the steps feel like they were receding correctly?',
+  },
+  {
+    id: 'per-18',
+    title: 'Reflective Object Study',
+    goal: 'Practice form and light logic on a shiny, reflective surface.',
+    how: [
+      'Find a reference of a reflective object (metal cup, glass, chrome).',
+      'Block in the basic form first (likely a cylinder or sphere).',
+      'Add high-contrast highlights and dark reflections instead of soft shading.',
+    ],
+    review: 'How did reflective shading differ from matte object shading?',
+  },
+  {
+    id: 'per-19',
+    title: 'Furniture as Forms',
+    goal: 'Practice breaking complex furniture into simple underlying shapes.',
+    how: [
+      'Find a reference of one piece of furniture (chair, table, sofa).',
+      'Identify the boxes and cylinders that make up its structure.',
+      'Draw it using only those simplified forms.',
+    ],
+    review: 'Could you see the basic forms hiding inside the furniture design?',
+  },
+  {
+    id: 'per-20',
+    title: 'Vehicle Basic Form Study',
+    goal: 'Apply box and cylinder construction to a vehicle.',
+    how: [
+      'Find a simple vehicle reference (car, truck, bicycle).',
+      'Block in the main body as a box and wheels as cylinders or circles.',
+      'Keep it loose — no surface detail yet.',
+    ],
+    review: 'Did treating the vehicle as boxes make it less intimidating?',
+  },
+  {
+    id: 'per-21',
+    title: 'Window Light Study',
+    goal: 'Practice a single, directional light source like window light.',
+    how: [
+      'Set up one simple object near an imagined window.',
+      'Use a single, consistent light direction.',
+      'Add a soft shadow falling away from the light source.',
+    ],
+    review: 'Did the light feel believably directional, not flat?',
+  },
+  {
+    id: 'per-22',
+    title: 'Two Light Sources Study',
+    goal: 'Practice the added complexity of more than one light source.',
+    how: [
+      'Set up one simple form (sphere or cube).',
+      'Add two light sources from different directions.',
+      'Show how the shadows and highlights interact or overlap.',
+    ],
+    review: 'Was it harder to keep the form readable with two lights?',
+  },
+  {
+    id: 'per-23',
+    title: 'Stacked Boxes Perspective Drill',
+    goal: 'Practice multiple forms at different depths in one scene.',
+    how: [
+      'Set a horizon line and vanishing point.',
+      'Draw 4 boxes of different sizes at different distances.',
+      'Make sure size and overlap correctly suggest depth.',
+    ],
+    review: 'Did the size difference clearly suggest which boxes were closer?',
+  },
+  {
+    id: 'per-24',
+    title: 'Doorway and Threshold Study',
+    goal: 'Practice a common architectural element in perspective.',
+    how: [
+      'Set up 1-point perspective with a horizon line.',
+      'Draw a simple doorway frame receding into the vanishing point.',
+      'Add a door slightly ajar, also following the perspective lines.',
+    ],
+    review: 'Did the open door feel like it belonged in the same space?',
+  },
+  {
+    id: 'per-25',
+    title: 'Form Study from a Photo',
+    goal: 'Practice translating a photo reference into simplified 3D forms.',
+    how: [
+      'Find any still life photo.',
+      'Identify the underlying forms of each object in the photo.',
+      'Draw a simplified version using only boxes, cylinders, and spheres.',
+    ],
+    review: 'Did simplifying the photo change how you saw the objects?',
+  },
+  {
+    id: 'per-26',
+    title: 'Cast Shadow Study',
+    goal: 'Practice drawing shadows that correctly follow perspective rules.',
+    how: [
+      'Set up one simple object and a light source above and to the side.',
+      'Project the cast shadow using the same vanishing point as the scene.',
+      'Check that the shadow shape matches the object\'s silhouette.',
+    ],
+    review: 'Did the shadow follow the same perspective as the object?',
+  },
+  {
+    id: 'per-27',
+    title: 'Object Cluster Composition',
+    goal: 'Practice arranging multiple forms into a pleasing still life.',
+    how: [
+      'Choose 3-4 simple objects.',
+      'Arrange them so they overlap and vary in size.',
+      'Draw the cluster, paying attention to consistent perspective and light.',
+    ],
+    review: 'Did the arrangement feel balanced or cluttered?',
+  },
+  {
+    id: 'per-28',
+    title: 'One-Point City Block',
+    goal: 'Combine multiple buildings into one consistent perspective scene.',
+    how: [
+      'Set up 1-point perspective with a clear horizon line.',
+      'Draw 3 buildings of varying height along the receding street.',
+      'Make sure all buildings respect the same vanishing point.',
+    ],
+    review: 'Did all 3 buildings feel like part of the same street?',
+  },
+  {
+    id: 'per-29',
+    title: 'Form Study: Drapery Basics',
+    goal: 'Practice the underlying forms beneath folded fabric.',
+    how: [
+      'Find a reference of draped or folded fabric.',
+      'Identify the simple tube and zigzag shapes that make up the folds.',
+      'Draw a simplified version focusing on the big fold shapes.',
+    ],
+    review: 'Could you simplify the complex fabric into basic shapes?',
+  },
+  {
+    id: 'per-30',
+    title: 'Low Angle Object Study',
+    goal: 'Practice drawing a form from an unusual, dramatic angle.',
+    how: [
+      'Choose one object.',
+      'Imagine viewing it from below, looking up.',
+      'Draw it from this low angle, adjusting the form\'s perspective accordingly.',
+    ],
+    review: 'Did the low angle make the object feel more dramatic?',
+  },
+  {
+    id: 'per-31',
+    title: 'High Angle Object Study',
+    goal: 'Practice drawing a form from directly above or at a steep downward angle.',
+    how: [
+      'Choose one object.',
+      'Imagine viewing it from above, looking down.',
+      'Draw it from this high angle, noting how the top surfaces become more visible.',
+    ],
+    review: 'Which surfaces became more visible from the high angle?',
+  },
+  {
+    id: 'per-32',
+    title: 'Perspective Speed Round',
+    goal: 'Test recall of perspective construction methods under time pressure.',
+    how: [
+      'Set a timer for 12 minutes.',
+      'Draw one box, one cylinder, and one simple room corner — all from memory.',
+      'No references — rely on what you\'ve practiced.',
+    ],
+    review: 'Which form came together fastest from memory?',
+  },
+]
+
+export const PERSPECTIVE_FORM: Fundamental = {
+  id: 'perspective-form',
+  name: 'Perspective & Form',
+  tagline: 'Boxes, cylinders, rooms, and objects that feel three-dimensional.',
+  exercises: perspectiveForm,
+}
