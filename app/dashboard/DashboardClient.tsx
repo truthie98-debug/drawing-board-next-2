@@ -1,19 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { TEACHER_FEEDBACK, type MonthFocus } from '@/lib/curriculum'
+import { TEACHER_FEEDBACK } from '@/lib/curriculum'
+import type { Fundamental } from '@/lib/exercises'
 
 type Streak = { date: string; completed_active: boolean }
 
 export function DashboardClient({
   profile,
-  focus,
+  todayFundamental,
   streaks,
   activeStreak,
   today,
 }: {
   profile: Record<string, string | number>
-  focus: MonthFocus
+  todayFundamental: Fundamental
   streaks: Streak[]
   activeStreak: number
   today: string
@@ -25,8 +26,8 @@ export function DashboardClient({
   )
 
   const doneSet = new Set(streaks.filter(s => s.completed_active).map(s => s.date))
-  const monthProgress = Math.round(((new Date().getDate()) / 30) * 100)
 
+  // Build calendar days for current month
   const now = new Date()
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
   const todayNum = now.getDate()
@@ -38,26 +39,23 @@ export function DashboardClient({
         Welcome back, {profile.artist_name}
       </h1>
 
+      {/* Top 3-col grid */}
       <div className="grid grid-cols-3 gap-4 mb-4">
+
+        {/* Focus */}
         <div className="card">
           <div className="flex items-start justify-between mb-4">
-            <p className="eyebrow">This Month</p>
-            <span className="pill text-[11px]">Max 2 fundamentals</span>
+            <p className="eyebrow">Today's Fundamental</p>
+            <span className="pill text-[11px]">1 of 5</span>
           </div>
           <h2 className="font-serif text-2xl font-normal tracking-tight mb-2">
-            Month {focus.month} · {focus.primary} + {focus.secondary}
+            {todayFundamental.name}
           </h2>
-          <p className="text-muted text-xs mb-4">{focus.note}</p>
-          <div className="flex gap-2 mb-4">
-            <span className="pill">{focus.primary}</span>
-            <span className="pill pill-neutral">{focus.secondary}</span>
-          </div>
-          <div className="progress-bar mb-1.5">
-            <div className="progress-fill" style={{ width: `${monthProgress}%` }} />
-          </div>
-          <p className="text-xs text-muted">Month {monthProgress}% complete</p>
+          <p className="text-muted text-xs mb-4">{todayFundamental.tagline}</p>
+          <a href="/assignments" className="btn btn-primary btn-sm">Start today's mission</a>
         </div>
 
+        {/* Streaks */}
         <div className="card">
           <p className="eyebrow mb-3">Streaks</p>
           {[
@@ -72,6 +70,7 @@ export function DashboardClient({
           ))}
         </div>
 
+        {/* Teacher */}
         <div className="card">
           <p className="eyebrow mb-2">Teacher</p>
           <div className="teacher-block">{feedback}</div>
@@ -87,6 +86,7 @@ export function DashboardClient({
         </div>
       </div>
 
+      {/* Calendar */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-serif text-xl font-normal">
