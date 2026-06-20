@@ -1,40 +1,12 @@
 import { createClient } from '@/lib/supabase-server'
-import { getFocusForMonth } from '@/lib/curriculum'
+import { redirect } from 'next/navigation'
 import { DashboardClient } from './DashboardClient'
-
-const DEMO_PROFILE: Record<string, string | number> = {
-  id: 'demo',
-  artist_name: 'Demo Artist',
-  current_month: 3,
-  avatar_url: '',
-  bio: 'Exploring figure drawing and expressive mark-making.',
-  strengths: 'Gesture, line quality, observation',
-  weaknesses: 'Values, cast shadow edges',
-}
-
-const DEMO_STREAKS: { date: string; completed_active: boolean }[] = Array.from({ length: 18 }, (_, i) => {
-  const d = new Date()
-  d.setDate(d.getDate() - i)
-  return { date: d.toISOString().split('T')[0], completed_active: true }
-})
+import { getTodayFundamentalIndex, FUNDAMENTALS } from '@/lib/exercises'
 
 export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    const focus = getFocusForMonth(3)
-    const today = new Date().toISOString().split('T')[0]
-    return (
-      <DashboardClient
-        profile={DEMO_PROFILE}
-        focus={focus}
-        streaks={DEMO_STREAKS}
-        activeStreak={18}
-        today={today}
-      />
-    )
-  }
+  if (!user) redirect('/auth')
 
   const { data: profile } = await supabase
     .from('profiles')
@@ -42,19 +14,7 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single()
 
-  if (!profile?.artist_name) {
-    const focus = getFocusForMonth(1)
-    const today = new Date().toISOString().split('T')[0]
-    return (
-      <DashboardClient
-        profile={{ ...DEMO_PROFILE, id: user.id }}
-        focus={focus}
-        streaks={[]}
-        activeStreak={0}
-        today={today}
-      />
-    )
-  }
+  if (!profile?.artist_name) redirect('/onboarding')
 
   const { data: streaks } = await supabase
     .from('streaks')
@@ -63,11 +23,13 @@ export default async function DashboardPage() {
     .order('date', { ascending: false })
     .limit(31)
 
-  const focus = getFocusForMonth(profile.current_month || 1)
-  const today = new Date().toISOString().split('T')[0]
+  const todayIndex = getTodayFundamentalIndex()
+  const todayFundamental = FUNDAMENTALS[todayIndex]
 
+  // Calculate streak count
+  const today = new Date().toISOString().split('T')[0]
   let activeStreakCount = 0
-  const sortedDates = (streaks || []).map((s: { date: string }) => s.date).sort().reverse()
+  const sortedDates = (streaks || []).map(s => s.date).sort().reverse()
   for (let i = 0; i < sortedDates.length; i++) {
     const expected = new Date()
     expected.setDate(expected.getDate() - i)
@@ -79,7 +41,7 @@ export default async function DashboardPage() {
   return (
     <DashboardClient
       profile={profile}
-      focus={focus}
+      todayFundamental={todayFundamental}
       streaks={streaks || []}
       activeStreak={activeStreakCount}
       today={today}
