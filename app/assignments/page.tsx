@@ -1,24 +1,36 @@
 import { createClient } from '@/lib/supabase-server'
-import { getFocusForMonth, getTodayMode } from '@/lib/curriculum'
+import { redirect } from 'next/navigation'
+import { getTodayFundamentalIndex, getDailyExercise, FUNDAMENTALS } from '@/lib/exercises'
+import { getWeekKey, getWeeklyColorLabExercise } from '@/lib/color-lab'
 import { AssignmentsClient } from './AssignmentsClient'
 
 export default async function AssignmentsPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/auth')
 
-  if (!user) {
-    const focus = getFocusForMonth(3)
-    const mode = getTodayMode()
-    return <AssignmentsClient focus={focus} initialMode={mode} userId="demo" />
-  }
+  const todayIndex = getTodayFundamentalIndex()
+  const todayFundamental = FUNDAMENTALS[todayIndex]
+  const exercise = getDailyExercise(todayFundamental.id)
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('current_month, artist_name')
-    .eq('id', user.id)
-    .single()
+  const weekKey = getWeekKey()
+  const colorLabExercise = getWeeklyColorLabExercise(weekKey)
 
-  const focus = getFocusForMonth(profile?.current_month || 1)
-  const mode = getTodayMode()
-  return <AssignmentsClient focus={focus} initialMode={mode} userId={user.id} />
+  const { data: colorLabCompletion } = await supabase
+    .from('color_lab_completions')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('week_key', weekKey)
+    .maybeSingle()
+
+  return (
+    <AssignmentsClient
+      userId={user.id}
+      initialFundamentalIndex={todayIndex}
+      initialExercise={exercise}
+      colorLabExercise={colorLabExercise}
+      weekKey={weekKey}
+      initialColorLabCompletion={colorLabCompletion}
+    />
+  )
 }
