@@ -62,6 +62,27 @@ export function DashboardClient({
   teacherReview: string
 }) {
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState('')
+  const [asking, setAsking] = useState(false)
+
+  async function askTeacher() {
+    if (!question.trim() || asking) return
+    setAsking(true)
+    setAnswer('')
+    try {
+      const res = await fetch('/api/teacher-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, submissions }),
+      })
+      const data = await res.json()
+      setAnswer(data.answer || data.error || 'Something went wrong.')
+    } catch {
+      setAnswer('Something went wrong — try again.')
+    }
+    setAsking(false)
+  }
 
   const dayMap = new Map<string, DayItem[]>()
   function addItem(dateKey: string, item: DayItem) {
@@ -128,6 +149,25 @@ export function DashboardClient({
         <div className="card">
           <p className="eyebrow mb-2">Teacher</p>
           <div className="teacher-block">{teacherReview}</div>
+
+          <div className="mt-4 pt-4 border-t border-line">
+            <p className="text-xs font-semibold tracking-widest uppercase text-secondary mb-2">Ask about your work</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={question}
+                onChange={e => setQuestion(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && askTeacher()}
+                placeholder="What should I focus on next?"
+                className="flex-1 border border-line rounded-xl bg-cream px-3 py-2 text-sm text-ink outline-none focus:border-accent transition-colors"
+              />
+              <button onClick={askTeacher} disabled={asking || !question.trim()} className="btn btn-primary btn-sm">
+                {asking ? '...' : 'Ask'}
+              </button>
+            </div>
+            {answer && <p className="text-sm text-muted mt-3 leading-relaxed">{answer}</p>}
+          </div>
+
           <div className="flex gap-2 mt-3">
             <a href="/uploads" className="btn btn-ghost btn-sm">Submit work</a>
           </div>
