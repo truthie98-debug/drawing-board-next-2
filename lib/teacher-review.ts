@@ -44,17 +44,17 @@ export async function getOrGenerateTeacherReview(
 
   // Most recent 6 pieces keep the review focused and fast
   const recent = submissions.slice(0, 6)
-  const imageBlocks: any[] = []
-  for (const sub of recent) {
-    if (!sub.image_url) continue
-    const img = await imageToBase64(sub.image_url)
-    if (img) {
-      imageBlocks.push({
-        type: 'image',
-        source: { type: 'base64', media_type: img.mediaType, data: img.data },
-      })
-    }
-  }
+
+  // Fetch all images in parallel instead of one at a time
+  const imageResults = await Promise.all(
+    recent.map(sub => (sub.image_url ? imageToBase64(sub.image_url) : Promise.resolve(null)))
+  )
+  const imageBlocks = imageResults
+    .filter((img): img is { data: string; mediaType: string } => img !== null)
+    .map(img => ({
+      type: 'image' as const,
+      source: { type: 'base64' as const, media_type: img.mediaType as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp', data: img.data },
+    }))
 
   const context = recent
     .map(s => `- ${s.type.replace('_', ' ')} on ${new Date(s.created_at).toLocaleDateString()}${s.notes ? `: "${s.notes}"` : ''}`)
