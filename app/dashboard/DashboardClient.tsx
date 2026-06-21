@@ -1,31 +1,37 @@
 'use client'
 
-import { useState } from 'react'
-import { TEACHER_FEEDBACK } from '@/lib/curriculum'
 import type { Fundamental } from '@/lib/exercises'
 
-type Streak = { date: string; completed_active: boolean }
+type Submission = {
+  id: string
+  title: string
+  type: string
+  created_at: string
+  feedback: string | null
+}
+
+function toLocalDateStr(iso: string) {
+  const d = new Date(iso)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
 
 export function DashboardClient({
   profile,
   todayFundamental,
-  streaks,
-  activeStreak,
+  submissions,
   today,
 }: {
   profile: Record<string, string | number>
   todayFundamental: Fundamental
-  streaks: Streak[]
-  activeStreak: number
+  submissions: Submission[]
   today: string
 }) {
-  const [feedback, setFeedback] = useState(
-    profile.weaknesses
-      ? `Your curriculum is prioritizing ${String(profile.weaknesses).split(',')[0].trim().toLowerCase()} while protecting your strengths in ${String(profile.strengths || '').split(',')[0]?.trim().toLowerCase() || 'personal expression'}.`
-      : TEACHER_FEEDBACK[0]
-  )
+  const latest = submissions[0]
+  const feedback = latest?.feedback
+    ? `On "${latest.title}": ${latest.feedback}`
+    : `Upload your first piece and I'll have feedback waiting for you here.`
 
-  const doneSet = new Set(streaks.filter(s => s.completed_active).map(s => s.date))
+  const doneSet = new Set(submissions.map(s => toLocalDateStr(s.created_at)))
 
   // Build calendar days for current month
   const now = new Date()
@@ -39,8 +45,7 @@ export function DashboardClient({
         Welcome back, {profile.artist_name}
       </h1>
 
-      {/* Top 3-col grid */}
-      <div className="grid grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-2 gap-4 mb-4">
 
         {/* Focus */}
         <div className="card">
@@ -55,32 +60,11 @@ export function DashboardClient({
           <a href="/assignments" className="btn btn-primary btn-sm">Start today's mission</a>
         </div>
 
-        {/* Streaks */}
-        <div className="card">
-          <p className="eyebrow mb-3">Streaks</p>
-          {[
-            { label: 'Active Work', value: `${activeStreak} days` },
-            { label: 'Daily Reflections', value: '5 days' },
-            { label: 'Weekly Assignments', value: '3 weeks' },
-          ].map(row => (
-            <div key={row.label} className="flex justify-between items-center py-3 border-b border-line last:border-0">
-              <span className="text-sm">{row.label}</span>
-              <strong className="font-serif text-xl font-normal">{row.value}</strong>
-            </div>
-          ))}
-        </div>
-
         {/* Teacher */}
         <div className="card">
           <p className="eyebrow mb-2">Teacher</p>
           <div className="teacher-block">{feedback}</div>
           <div className="flex gap-2 mt-3">
-            <button
-              className="btn btn-ghost btn-sm"
-              onClick={() => setFeedback(TEACHER_FEEDBACK[Math.floor(Math.random() * TEACHER_FEEDBACK.length)])}
-            >
-              New feedback
-            </button>
             <a href="/uploads" className="btn btn-ghost btn-sm">Submit work</a>
           </div>
         </div>
@@ -95,7 +79,7 @@ export function DashboardClient({
           <div className="flex gap-4 text-xs text-muted">
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#FFF8E0] border border-gold/40 inline-block" />
-              Study done
+              Work uploaded
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm border border-accent border-[1.5px] inline-block" />
