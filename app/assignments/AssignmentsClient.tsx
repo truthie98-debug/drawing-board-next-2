@@ -58,7 +58,9 @@ export function AssignmentsClient({
   }
 
   async function markComplete() {
-    const today = new Date().toISOString().split('T')[0]
+    // Use local date, not UTC — toISOString() shifts to the wrong calendar day in the evening
+    const now = new Date()
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
     await supabase.from('streaks').upsert(
       { user_id: userId, date: today, completed_active: true },
       { onConflict: 'user_id,date' }
