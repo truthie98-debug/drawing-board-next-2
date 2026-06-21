@@ -32,23 +32,15 @@ export default async function DashboardPage() {
 
   const { data: colorLabCompletions } = await supabase
     .from('color_lab_completions')
-    .select('completed_at')
+    .select('*')
     .eq('user_id', user.id)
     .limit(20)
 
   const { data: reflections } = await supabase
     .from('reflections')
-    .select('created_at')
+    .select('*')
     .eq('user_id', user.id)
     .limit(60)
-
-  // Pass raw timestamps — date math happens in the browser so it matches the visitor's actual local time
-  const completedRaw = {
-    submissions: (submissions || []).map(s => s.created_at as string),
-    streaks: (streaks || []).map(s => s.date as string),
-    colorLab: (colorLabCompletions || []).map(c => c.completed_at as string),
-    reflections: (reflections || []).map(r => r.created_at as string),
-  }
 
   const teacherReview = await getOrGenerateTeacherReview(supabase, user.id, profile, submissions || [])
 
@@ -59,7 +51,10 @@ export default async function DashboardPage() {
     <DashboardClient
       profile={profile}
       todayFundamental={todayFundamental}
-      completedRaw={completedRaw}
+      submissions={submissions || []}
+      streaks={streaks || []}
+      colorLabCompletions={colorLabCompletions || []}
+      reflections={reflections || []}
       teacherReview={teacherReview}
     />
   )
