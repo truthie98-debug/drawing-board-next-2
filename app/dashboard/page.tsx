@@ -4,6 +4,8 @@ import { DashboardClient } from './DashboardClient'
 import { getTodayFundamentalIndex, FUNDAMENTALS } from '@/lib/exercises'
 import { getOrGenerateTeacherReview } from '@/lib/teacher-review'
 
+export const maxDuration = 60
+
 export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
