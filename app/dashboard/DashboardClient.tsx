@@ -2,31 +2,20 @@
 
 import type { Fundamental } from '@/lib/exercises'
 
-type Submission = {
-  id: string
-  type: string
-  created_at: string
-}
-
-function toLocalDateStr(iso: string) {
-  const d = new Date(iso)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
 export function DashboardClient({
   profile,
   todayFundamental,
-  submissions,
+  completedDates,
   teacherReview,
   today,
 }: {
   profile: Record<string, string | number>
   todayFundamental: Fundamental
-  submissions: Submission[]
+  completedDates: string[]
   teacherReview: string
   today: string
 }) {
-  const doneSet = new Set(submissions.map(s => toLocalDateStr(s.created_at)))
+  const doneSet = new Set(completedDates)
 
   const now = new Date()
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
@@ -69,7 +58,7 @@ export function DashboardClient({
           <div className="flex gap-4 text-xs text-muted">
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#FFF8E0] border border-gold/40 inline-block" />
-              Work uploaded
+              Completed
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm border border-accent border-[1.5px] inline-block" />
