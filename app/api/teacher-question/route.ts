@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 
+export const maxDuration = 60
+
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 async function imageToBase64(url: string): Promise<{ data: string; mediaType: string } | null> {
@@ -27,17 +29,17 @@ export async function POST(req: NextRequest) {
     }
 
     const recent = (submissions || []).slice(0, 6)
-    const imageBlocks: any[] = []
-    for (const sub of recent) {
-      if (!sub.image_url) continue
-      const img = await imageToBase64(sub.image_url)
-      if (img) {
-        imageBlocks.push({
-          type: 'image',
-          source: { type: 'base64', media_type: img.mediaType, data: img.data },
-        })
-      }
-    }
+
+    // Fetch all images in parallel instead of one at a time
+    const imageResults = await Promise.all(
+      recent.map((sub: any) => (sub.image_url ? imageToBase64(sub.image_url) : Promise.resolve(null)))
+    )
+    const imageBlocks = imageResults
+      .filter((img): img is { data: string; mediaType: string } => img !== null)
+      .map(img => ({
+        type: 'image' as const,
+        source: { type: 'base64' as const, media_type: img.mediaType as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp', data: img.data },
+      }))
 
     const context = recent
       .map((s: any) => `- ${s.type?.replace('_', ' ') || 'piece'} on ${new Date(s.created_at).toLocaleDateString()}${s.notes ? `: "${s.notes}"` : ''}`)
