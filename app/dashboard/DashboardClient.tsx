@@ -2,20 +2,49 @@
 
 import type { Fundamental } from '@/lib/exercises'
 
+type CompletedRaw = {
+  submissions: string[]
+  streaks: string[]
+  colorLab: string[]
+  reflections: string[]
+}
+
+function toLocalDateStr(input: string) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(input)) return input
+  const d = new Date(input)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+const TYPE_LABELS: Record<string, string> = {
+  daily: 'Daily Exercise',
+  upload: 'Upload',
+  colorlab: 'Color Lab',
+  reflection: 'Reflection',
+}
+
 export function DashboardClient({
   profile,
   todayFundamental,
-  completedDates,
+  completedRaw,
   teacherReview,
-  today,
 }: {
   profile: Record<string, string | number>
   todayFundamental: Fundamental
-  completedDates: string[]
+  completedRaw: CompletedRaw
   teacherReview: string
-  today: string
 }) {
-  const doneSet = new Set(completedDates)
+  const dayMap = new Map<string, Set<string>>()
+  function addAll(dates: string[], type: string) {
+    for (const raw of dates) {
+      const key = toLocalDateStr(raw)
+      if (!dayMap.has(key)) dayMap.set(key, new Set())
+      dayMap.get(key)!.add(type)
+    }
+  }
+  addAll(completedRaw.submissions, 'upload')
+  addAll(completedRaw.streaks, 'daily')
+  addAll(completedRaw.colorLab, 'colorlab')
+  addAll(completedRaw.reflections, 'reflection')
 
   const now = new Date()
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
@@ -70,11 +99,13 @@ export function DashboardClient({
           {Array.from({ length: daysInMonth }, (_, i) => {
             const day = i + 1
             const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-            const done = doneSet.has(dateStr)
+            const types = dayMap.get(dateStr)
+            const done = !!types && types.size > 0
             const isToday = day === todayNum
             return (
               <div
                 key={day}
+                title={types ? Array.from(types).map(t => TYPE_LABELS[t] || t).join(', ') : undefined}
                 className={`aspect-square rounded-xl p-1.5 text-xs border ${
                   isToday ? 'border-accent border-[1.5px]' : done ? 'border-gold/40 bg-[#FFF8E0]' : 'border-line bg-cream'
                 }`}
