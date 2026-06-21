@@ -66,6 +66,12 @@ export function DashboardClient({
   const [answer, setAnswer] = useState('')
   const [asking, setAsking] = useState(false)
 
+  const [quickFile, setQuickFile] = useState<File | null>(null)
+  const [quickPreview, setQuickPreview] = useState('')
+  const [quickFeedback, setQuickFeedback] = useState('')
+  const [quickError, setQuickError] = useState('')
+  const [quickLoading, setQuickLoading] = useState(false)
+
   async function askTeacher() {
     if (!question.trim() || asking) return
     setAsking(true)
@@ -82,6 +88,37 @@ export function DashboardClient({
       setAnswer('Something went wrong — try again.')
     }
     setAsking(false)
+  }
+
+  function handleQuickFileChange(file: File | null) {
+    if (!file) return
+    setQuickFile(file)
+    setQuickFeedback('')
+    setQuickError('')
+    const reader = new FileReader()
+    reader.onload = () => setQuickPreview(reader.result as string)
+    reader.readAsDataURL(file)
+  }
+
+  async function getQuickFeedback() {
+    if (!quickFile || quickLoading) return
+    setQuickLoading(true)
+    setQuickFeedback('')
+    setQuickError('')
+    try {
+      const formData = new FormData()
+      formData.append('image', quickFile)
+      const res = await fetch('/api/teacher-feedback', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (!res.ok || data.error) {
+        setQuickError(data.error || 'Something went wrong — try again.')
+      } else {
+        setQuickFeedback(data.feedback)
+      }
+    } catch {
+      setQuickError('Something went wrong — try again.')
+    }
+    setQuickLoading(false)
   }
 
   const dayMap = new Map<string, DayItem[]>()
@@ -166,6 +203,31 @@ export function DashboardClient({
               </button>
             </div>
             {answer && <p className="text-sm text-muted mt-3 leading-relaxed">{answer}</p>}
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-line">
+            <p className="text-xs font-semibold tracking-widest uppercase text-secondary mb-2">Quick feedback on a piece</p>
+            <div className="flex items-center gap-3">
+              <label className="btn btn-ghost btn-sm cursor-pointer">
+                {quickFile ? 'Change photo' : 'Upload photo'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={e => handleQuickFileChange(e.target.files?.[0] || null)}
+                />
+              </label>
+              {quickPreview && (
+                <img src={quickPreview} alt="Selected piece" className="w-12 h-12 rounded-lg object-cover border border-line" />
+              )}
+              {quickFile && (
+                <button onClick={getQuickFeedback} disabled={quickLoading} className="btn btn-primary btn-sm">
+                  {quickLoading ? 'Looking…' : 'Get feedback'}
+                </button>
+              )}
+            </div>
+            {quickFeedback && <p className="text-sm text-muted mt-3 leading-relaxed">{quickFeedback}</p>}
+            {quickError && <p className="text-sm text-accent mt-3">{quickError}</p>}
           </div>
 
           <div className="flex gap-2 mt-3">
