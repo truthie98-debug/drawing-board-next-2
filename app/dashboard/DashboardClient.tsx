@@ -4,10 +4,8 @@ import type { Fundamental } from '@/lib/exercises'
 
 type Submission = {
   id: string
-  title: string
   type: string
   created_at: string
-  feedback: string | null
 }
 
 function toLocalDateStr(iso: string) {
@@ -19,21 +17,17 @@ export function DashboardClient({
   profile,
   todayFundamental,
   submissions,
+  teacherReview,
   today,
 }: {
   profile: Record<string, string | number>
   todayFundamental: Fundamental
   submissions: Submission[]
+  teacherReview: string
   today: string
 }) {
-  const latest = submissions[0]
-  const feedback = latest?.feedback
-    ? `On "${latest.title}": ${latest.feedback}`
-    : `Upload your first piece and I'll have feedback waiting for you here.`
-
   const doneSet = new Set(submissions.map(s => toLocalDateStr(s.created_at)))
 
-  // Build calendar days for current month
   const now = new Date()
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
   const todayNum = now.getDate()
@@ -46,8 +40,6 @@ export function DashboardClient({
       </h1>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
-
-        {/* Focus */}
         <div className="card">
           <div className="flex items-start justify-between mb-4">
             <p className="eyebrow">Today's Fundamental</p>
@@ -60,17 +52,15 @@ export function DashboardClient({
           <a href="/assignments" className="btn btn-primary btn-sm">Start today's mission</a>
         </div>
 
-        {/* Teacher */}
         <div className="card">
           <p className="eyebrow mb-2">Teacher</p>
-          <div className="teacher-block">{feedback}</div>
+          <div className="teacher-block">{teacherReview}</div>
           <div className="flex gap-2 mt-3">
             <a href="/uploads" className="btn btn-ghost btn-sm">Submit work</a>
           </div>
         </div>
       </div>
 
-      {/* Calendar */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-serif text-xl font-normal">
