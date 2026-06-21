@@ -4,11 +4,6 @@ import { DashboardClient } from './DashboardClient'
 import { getTodayFundamentalIndex, FUNDAMENTALS } from '@/lib/exercises'
 import { getOrGenerateTeacherReview } from '@/lib/teacher-review'
 
-function toLocalDateStr(iso: string) {
-  const d = new Date(iso)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
 export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -47,26 +42,25 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .limit(60)
 
-  const completedDates = Array.from(new Set([
-    ...(submissions || []).map(s => toLocalDateStr(s.created_at)),
-    ...(streaks || []).map(s => s.date as string),
-    ...(colorLabCompletions || []).map(c => toLocalDateStr(c.completed_at)),
-    ...(reflections || []).map(r => toLocalDateStr(r.created_at)),
-  ]))
+  // Pass raw timestamps — date math happens in the browser so it matches the visitor's actual local time
+  const completedRaw = {
+    submissions: (submissions || []).map(s => s.created_at as string),
+    streaks: (streaks || []).map(s => s.date as string),
+    colorLab: (colorLabCompletions || []).map(c => c.completed_at as string),
+    reflections: (reflections || []).map(r => r.created_at as string),
+  }
 
   const teacherReview = await getOrGenerateTeacherReview(supabase, user.id, profile, submissions || [])
 
   const todayIndex = getTodayFundamentalIndex()
   const todayFundamental = FUNDAMENTALS[todayIndex]
-  const today = new Date().toISOString().split('T')[0]
 
   return (
     <DashboardClient
       profile={profile}
       todayFundamental={todayFundamental}
-      completedDates={completedDates}
+      completedRaw={completedRaw}
       teacherReview={teacherReview}
-      today={today}
     />
   )
 }
