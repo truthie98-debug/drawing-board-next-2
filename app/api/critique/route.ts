@@ -1,24 +1,21 @@
+export const maxDuration = 30
+
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
-
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
-
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: 'API key not configured' }, { status: 503 })
   }
-
   try {
     const formData = await req.formData()
     const imageFile = formData.get('image') as File
     if (!imageFile) return NextResponse.json({ error: 'No image provided' }, { status: 400 })
-
     const arrayBuffer = await imageFile.arrayBuffer()
     const base64 = Buffer.from(arrayBuffer).toString('base64')
     const mediaType = imageFile.type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
-
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 1024,
@@ -58,7 +55,6 @@ export async function POST(req: NextRequest) {
         },
       ],
     })
-
     const text = message.content[0].type === 'text' ? message.content[0].text : ''
     const clean = text.replace(/```json|```/g, '').trim()
     const result = JSON.parse(clean)
