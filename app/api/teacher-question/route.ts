@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import sharp from 'sharp'
 
 export const maxDuration = 60
 
@@ -9,10 +10,14 @@ async function imageToBase64(url: string): Promise<{ data: string; mediaType: st
   try {
     const res = await fetch(url)
     if (!res.ok) return null
-    const contentType = res.headers.get('content-type') || 'image/jpeg'
     const arrayBuffer = await res.arrayBuffer()
-    const data = Buffer.from(arrayBuffer).toString('base64')
-    return { data, mediaType: contentType }
+    const buffer = Buffer.from(arrayBuffer)
+    // Resize so we never hit Claude's 10MB-per-image limit
+    const resized = await sharp(buffer)
+      .resize(1568, 1568, { fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer()
+    return { data: resized.toString('base64'), mediaType: 'image/jpeg' }
   } catch {
     return null
   }
@@ -30,7 +35,6 @@ export async function POST(req: NextRequest) {
 
     const recent = (submissions || []).slice(0, 6)
 
-    // Fetch all images in parallel instead of one at a time
     const imageResults = await Promise.all(
       recent.map((sub: any) => (sub.image_url ? imageToBase64(sub.image_url) : Promise.resolve(null)))
     )
@@ -38,7 +42,7 @@ export async function POST(req: NextRequest) {
       .filter((img): img is { data: string; mediaType: string } => img !== null)
       .map(img => ({
         type: 'image' as const,
-        source: { type: 'base64' as const, media_type: img.mediaType as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp', data: img.data },
+        source: { type: 'base64' as const, media_type: img.mediaType as 'image/jpeg', data: img.data },
       }))
 
     const context = recent
