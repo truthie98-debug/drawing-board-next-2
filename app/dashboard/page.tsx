@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { DashboardClient } from './DashboardClient'
 import { getTodayFundamentalIndex, FUNDAMENTALS } from '@/lib/exercises'
+import { getOrGenerateTeacherReview } from '@/lib/teacher-review'
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -22,6 +23,8 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
     .limit(60)
 
+  const teacherReview = await getOrGenerateTeacherReview(supabase, user.id, profile, submissions || [])
+
   const todayIndex = getTodayFundamentalIndex()
   const todayFundamental = FUNDAMENTALS[todayIndex]
   const today = new Date().toISOString().split('T')[0]
@@ -31,6 +34,7 @@ export default async function DashboardPage() {
       profile={profile}
       todayFundamental={todayFundamental}
       submissions={submissions || []}
+      teacherReview={teacherReview}
       today={today}
     />
   )
