@@ -13,37 +13,24 @@ export default async function DashboardPage() {
     .select('*')
     .eq('id', user.id)
     .single()
-
   if (!profile?.artist_name) redirect('/onboarding')
 
-  const { data: streaks } = await supabase
-    .from('streaks')
+  const { data: submissions } = await supabase
+    .from('submissions')
     .select('*')
     .eq('user_id', user.id)
-    .order('date', { ascending: false })
-    .limit(31)
+    .order('created_at', { ascending: false })
+    .limit(60)
 
   const todayIndex = getTodayFundamentalIndex()
   const todayFundamental = FUNDAMENTALS[todayIndex]
-
-  // Calculate streak count
   const today = new Date().toISOString().split('T')[0]
-  let activeStreakCount = 0
-  const sortedDates = (streaks || []).map(s => s.date).sort().reverse()
-  for (let i = 0; i < sortedDates.length; i++) {
-    const expected = new Date()
-    expected.setDate(expected.getDate() - i)
-    if (sortedDates[i] === expected.toISOString().split('T')[0]) {
-      activeStreakCount++
-    } else break
-  }
 
   return (
     <DashboardClient
       profile={profile}
       todayFundamental={todayFundamental}
-      streaks={streaks || []}
-      activeStreak={activeStreakCount}
+      submissions={submissions || []}
       today={today}
     />
   )
