@@ -1,4 +1,5 @@
 'use client'
+
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase-browser'
 import { CURRICULUMS, getCurriculumById } from '@/lib/Curriculum'
@@ -96,7 +97,7 @@ export default function AcademyPage() {
   async function handleDayComplete() {
     if (!enrollment || !user) return
 
-    const curriculum = getCurriculumById(enrollment.curriculum_id)
+    const curriculum: any = getCurriculumById(enrollment.curriculum_id)
     await loadProgress(user.id, enrollment.curriculum_id)
 
     const nextDay = enrollment.current_day + 1
@@ -120,8 +121,14 @@ export default function AcademyPage() {
     if (updated) setEnrollment(updated)
   }
 
-  const curriculum = enrollment ? getCurriculumById(enrollment.curriculum_id) : null
-  const completedDayNumbers = allProgress.filter((p: any) => p.is_complete).map((p: any) => p.day_number)
+  const curriculum: any = enrollment
+    ? getCurriculumById(enrollment.curriculum_id)
+    : null
+
+  const completedDayNumbers = allProgress
+    .filter((p: any) => p.is_complete)
+    .map((p: any) => p.day_number)
+
   const completedCount = completedDayNumbers.length
   const unlockedUpTo = enrollment?.current_day ?? 1
 
@@ -154,7 +161,7 @@ export default function AcademyPage() {
             {curriculum.title} Complete
           </h1>
           <p className="text-gray-500 mb-6">
-            You completed all {curriculum.totalDays} days. That's a real commitment.
+            You completed all {curriculum.totalDays} days. That is a real commitment.
           </p>
           <div className="grid grid-cols-3 gap-3 mb-8">
             <div className="bg-gray-50 rounded-xl p-3">
@@ -199,7 +206,7 @@ export default function AcademyPage() {
             </h1>
             <p className="text-gray-500 max-w-xl">
               A structured 6-month art curriculum. One curriculum at a time.
-              15–30 minutes a day. No guesswork — just show up and draw.
+              15 to 30 minutes a day. No guesswork — just show up and draw.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
