@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase-browser'
 import ExerciseCard from './ExerciseCard'
 
 export default function TodayAssignment({ curriculum, dayNumber, userId, onDayComplete }) {
