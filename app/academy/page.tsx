@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { CURRICULUMS, getCurriculumById } from '@/lib/curriculum'
+import { createClient } from '@/lib/supabase-browser'
+import { CURRICULUMS, getCurriculumById } from '@/lib/Curriculum'
 import CurriculumCard from '@/components/academy/CurriculumCard'
 import MonthHeader from '@/components/academy/MonthHeader'
 import TodayAssignment from '@/components/academy/TodayAssignment'
