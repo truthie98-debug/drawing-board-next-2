@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase-browser'
 
 export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId, initialComplete = false, initialUploadUrl = null }) {
   const [complete, setComplete] = useState(initialComplete)
