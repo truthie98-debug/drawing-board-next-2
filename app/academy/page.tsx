@@ -10,11 +10,11 @@ import DayNav from '@/components/academy/DayNav'
 import DayGrid from '@/components/academy/DayGrid'
 
 export default function AcademyPage() {
-  const [user, setUser] = useState(null)
-  const [enrollment, setEnrollment] = useState(null)
-  const [allProgress, setAllProgress] = useState([])
-  const [allUploads, setAllUploads] = useState({})
-  const [viewingDay, setViewingDay] = useState(null)
+  const [user, setUser] = useState<any>(null)
+  const [enrollment, setEnrollment] = useState<any>(null)
+  const [allProgress, setAllProgress] = useState<any[]>([])
+  const [allUploads, setAllUploads] = useState<any>({})
+  const [viewingDay, setViewingDay] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [starting, setStarting] = useState(false)
   const [showComplete, setShowComplete] = useState(false)
@@ -46,7 +46,7 @@ export default function AcademyPage() {
     load()
   }, [])
 
-  async function loadProgress(userId, curriculumId) {
+  async function loadProgress(userId: string, curriculumId: number) {
     const [{ data: prog }, { data: ups }] = await Promise.all([
       supabase
         .from('academy_progress')
@@ -62,15 +62,15 @@ export default function AcademyPage() {
 
     setAllProgress(prog ?? [])
 
-    const uploadMap = {}
-    ups?.forEach(u => {
+    const uploadMap: any = {}
+    ups?.forEach((u: any) => {
       if (!uploadMap[u.day_number]) uploadMap[u.day_number] = {}
       uploadMap[u.day_number][u.exercise_id] = u.file_url
     })
     setAllUploads(uploadMap)
   }
 
-  async function handleStart(curriculumId) {
+  async function handleStart(curriculumId: number) {
     if (!user || starting) return
     setStarting(true)
 
@@ -122,13 +122,13 @@ export default function AcademyPage() {
   }
 
   const curriculum = enrollment ? getCurriculumById(enrollment.curriculum_id) : null
-  const completedDayNumbers = allProgress.filter(p => p.is_complete).map(p => p.day_number)
+  const completedDayNumbers = allProgress.filter((p: any) => p.is_complete).map((p: any) => p.day_number)
   const completedCount = completedDayNumbers.length
   const unlockedUpTo = enrollment?.current_day ?? 1
 
   function calcStreak() {
     if (completedDayNumbers.length === 0) return 0
-    const sorted = [...completedDayNumbers].sort((a, b) => b - a)
+    const sorted = [...completedDayNumbers].sort((a: number, b: number) => b - a)
     let streak = 0
     let expected = sorted[0]
     for (const day of sorted) {
@@ -204,7 +204,7 @@ export default function AcademyPage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {CURRICULUMS.map((c) => (
+            {CURRICULUMS.map((c: any) => (
               <CurriculumCard
                 key={c.id}
                 curriculum={c}
@@ -233,8 +233,8 @@ export default function AcademyPage() {
           currentDay={viewingDay}
           totalDays={curriculum.totalDays}
           unlockedUpTo={unlockedUpTo}
-          onPrev={() => setViewingDay(d => Math.max(1, d - 1))}
-          onNext={() => setViewingDay(d => Math.min(unlockedUpTo, d + 1))}
+          onPrev={() => setViewingDay((d: number) => Math.max(1, d - 1))}
+          onNext={() => setViewingDay((d: number) => Math.min(unlockedUpTo, d + 1))}
         />
 
         <TodayAssignment
