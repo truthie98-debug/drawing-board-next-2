@@ -29,10 +29,8 @@ export default function DayGrid({ curriculum, currentDay, completedDays, unlocke
 
   return (
     <>
-      <div>
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-          30-Day Progress
-        </p>
+      <div className="card">
+        <p className="eyebrow mb-3">30-Day Progress</p>
         <div className="grid grid-cols-6 gap-2">
           {curriculum.days.map(({ day, topic }) => {
             const state = getDayState(day)
@@ -43,37 +41,37 @@ export default function DayGrid({ curriculum, currentDay, completedDays, unlocke
                 disabled={state === 'locked'}
                 title={state !== 'locked' ? `Day ${day} — ${topic}` : `Day ${day} — locked`}
                 className={`
-                  aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-bold
+                  aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-semibold
                   transition-all duration-200 relative
                   ${state === 'complete'
-                    ? 'bg-yellow-400 text-black hover:bg-yellow-300'
+                    ? 'bg-accent text-white hover:opacity-90'
                     : state === 'current'
-                    ? 'bg-white border-2 border-yellow-400 text-black hover:bg-yellow-50'
+                    ? 'bg-cream border-2 border-accent text-ink'
                     : state === 'unlocked'
-                    ? 'bg-white border-2 border-gray-200 text-gray-600 hover:border-gray-400'
-                    : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                    ? 'bg-cream border border-line text-ink hover:border-accent'
+                    : 'bg-cream text-muted cursor-not-allowed opacity-40'
                   }
                 `}
               >
                 <span>{day}</span>
                 {state === 'complete' && uploads?.[day] && (
-                  <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-black rounded-full" />
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-white rounded-full opacity-80" />
                 )}
               </button>
             )
           })}
         </div>
 
-        <div className="flex items-center gap-4 mt-3 flex-wrap">
+        <div className="flex items-center gap-4 mt-4 flex-wrap">
           {[
-            { color: 'bg-yellow-400', label: 'Complete' },
-            { color: 'bg-white border-2 border-yellow-400', label: 'Today' },
-            { color: 'bg-white border-2 border-gray-200', label: 'Unlocked' },
-            { color: 'bg-gray-100', label: 'Locked' },
+            { color: 'bg-accent', label: 'Complete' },
+            { color: 'bg-cream border-2 border-accent', label: 'Today' },
+            { color: 'bg-cream border border-line', label: 'Unlocked' },
+            { color: 'bg-cream opacity-40', label: 'Locked' },
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-1.5">
               <div className={`w-3 h-3 rounded ${color}`} />
-              <span className="text-xs text-gray-400">{label}</span>
+              <span className="text-xs text-muted">{label}</span>
             </div>
           ))}
         </div>
@@ -81,21 +79,24 @@ export default function DayGrid({ curriculum, currentDay, completedDays, unlocke
 
       {modalDay && (
         <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-ink/40 z-50 flex items-center justify-center p-4"
           onClick={() => setModalDay(null)}
         >
           <div
-            className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl"
+            className="card max-w-md w-full shadow-xl"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-xs font-bold text-yellow-500 uppercase tracking-widest">
-                  Day {modalDay}
-                </p>
-                <h3 className="text-lg font-black text-gray-900">{dayData?.topic}</h3>
+                <p className="eyebrow">Day {modalDay}</p>
+                <h3 className="font-serif text-2xl font-normal tracking-tight">
+                  {dayData?.topic}
+                </h3>
               </div>
-              <button onClick={() => setModalDay(null)} className="text-gray-400 hover:text-gray-600">
+              <button
+                onClick={() => setModalDay(null)}
+                className="text-muted hover:text-ink transition-colors"
+              >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -109,21 +110,27 @@ export default function DayGrid({ curriculum, currentDay, completedDays, unlocke
                   if (!url) return null
                   return (
                     <div key={ex.id}>
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                      <p className="text-xs font-semibold text-muted uppercase tracking-widest mb-2">
                         {ex.title}
                       </p>
-                      <img src={url} alt={ex.title} className="w-full rounded-lg object-cover max-h-56" />
+                      <img
+                        src={url}
+                        alt={ex.title}
+                        className="w-full rounded-xl object-cover max-h-56 border border-line"
+                      />
                     </div>
                   )
                 })}
               </div>
             ) : (
-              <p className="text-gray-400 text-sm text-center py-6">No uploads for this day.</p>
+              <p className="text-muted text-sm text-center py-6">
+                No uploads for this day.
+              </p>
             )}
 
             <button
               onClick={() => { onSelectDay(modalDay); setModalDay(null) }}
-              className="w-full mt-4 py-2.5 bg-black text-white text-sm font-bold rounded-full hover:bg-gray-800 transition-colors"
+              className="btn btn-primary btn-md w-full mt-4"
             >
               Go to Day {modalDay}
             </button>
