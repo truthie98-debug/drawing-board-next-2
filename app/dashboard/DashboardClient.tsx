@@ -31,6 +31,12 @@ type DayItem = {
   text?: string | null
 }
 
+type AcademyEnrollment = {
+  curriculum_id: number
+  current_day: number
+  started_at: string
+} | null
+
 function toLocalDateStr(input: string) {
   if (/^\d{4}-\d{2}-\d{2}$/.test(input)) return input
   const d = new Date(input)
@@ -44,6 +50,15 @@ const TYPE_NAMES: Record<string, string> = {
   reflection: 'Reflection',
 }
 
+const CURRICULUM_NAMES: Record<number, { title: string; subtitle: string }> = {
+  1: { title: 'Anatomy + Figure Drawing', subtitle: 'Build the figure from the head outward' },
+  2: { title: 'Perspective & Form', subtitle: 'Make figures exist in 3D space' },
+  3: { title: 'Composition & Storytelling', subtitle: 'Place figures in scenes that communicate' },
+  4: { title: 'Color Theory', subtitle: 'Add color language to your work' },
+  5: { title: 'Character Design', subtitle: 'Translate anatomy into original characters' },
+  6: { title: 'Shape Design', subtitle: 'Develop your graphic illustration voice' },
+}
+
 export function DashboardClient({
   profile,
   todayFundamental,
@@ -52,6 +67,8 @@ export function DashboardClient({
   colorLabCompletions,
   reflections,
   teacherReview,
+  academyEnrollment,
+  academyCompletedDays,
 }: {
   profile: Record<string, string | number>
   todayFundamental: Fundamental
@@ -60,6 +77,8 @@ export function DashboardClient({
   colorLabCompletions: ColorLabCompletion[]
   reflections: Reflection[]
   teacherReview: string
+  academyEnrollment: AcademyEnrollment
+  academyCompletedDays: number
 }) {
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [question, setQuestion] = useState('')
@@ -136,10 +155,7 @@ export function DashboardClient({
     })
   })
   streaks.forEach(s => {
-    addItem(s.date, {
-      type: 'daily',
-      label: TYPE_NAMES.daily,
-    })
+    addItem(s.date, { type: 'daily', label: TYPE_NAMES.daily })
   })
   colorLabCompletions.forEach(c => {
     addItem(toLocalDateStr(c.completed_at), {
@@ -160,8 +176,15 @@ export function DashboardClient({
   const now = new Date()
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
   const todayNum = now.getDate()
-
   const selectedItems = selectedDay ? dayMap.get(selectedDay) || [] : []
+
+  const curriculumInfo = academyEnrollment
+    ? CURRICULUM_NAMES[academyEnrollment.curriculum_id]
+    : null
+
+  const percentage = academyEnrollment
+    ? Math.round((academyCompletedDays / 30) * 100)
+    : 0
 
   return (
     <div className="max-w-[1100px] mx-auto px-8 py-11 pb-16">
@@ -171,24 +194,74 @@ export function DashboardClient({
       </h1>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
+
+        {/* Academy Card */}
         <div className="card">
-          <div className="flex items-start justify-between mb-4">
-            <p className="eyebrow">Today's Fundamental</p>
-            <span className="pill text-[11px]">1 of 5</span>
-          </div>
-          <h2 className="font-serif text-2xl font-normal tracking-tight mb-2">
-            {todayFundamental.name}
-          </h2>
-          <p className="text-muted text-xs mb-4">{todayFundamental.tagline}</p>
-          <a href="/assignments" className="btn btn-primary btn-sm">Start today's mission</a>
+          {academyEnrollment && curriculumInfo ? (
+            <>
+              <p className="eyebrow">Active Curriculum</p>
+              <h2 className="font-serif text-2xl font-normal tracking-tight mb-1">
+                {curriculumInfo.title}
+              </h2>
+              <p className="text-muted text-xs mb-5">{curriculumInfo.subtitle}</p>
+
+              <div className="grid grid-cols-3 gap-2 mb-5">
+                <div className="bg-cream border border-line rounded-xl p-3 text-center">
+                  <p className="text-accent text-lg font-semibold">{academyCompletedDays}</p>
+                  <p className="text-muted text-xs">Days Done</p>
+                </div>
+                <div className="bg-cream border border-line rounded-xl p-3 text-center">
+                  <p className="text-accent text-lg font-semibold">{academyEnrollment.current_day}</p>
+                  <p className="text-muted text-xs">Current Day</p>
+                </div>
+                <div className="bg-cream border border-line rounded-xl p-3 text-center">
+                  <p className="text-accent text-lg font-semibold">{percentage}%</p>
+                  <p className="text-muted text-xs">Complete</p>
+                </div>
+              </div>
+
+              <div className="mb-5">
+                <div className="flex justify-between text-xs text-muted mb-1.5">
+                  <span>Progress</span>
+                  <span>Day {academyEnrollment.current_day} of 30</span>
+                </div>
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill transition-all duration-500"
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+              </div>
+
+              <a href="/academy" className="btn btn-primary btn-sm">
+                Continue — Day {academyEnrollment.current_day}
+              </a>
+            </>
+          ) : (
+            <>
+              <p className="eyebrow">Academy</p>
+              <h2 className="font-serif text-2xl font-normal tracking-tight mb-2">
+                Start your curriculum
+              </h2>
+              <p className="text-muted text-xs mb-4">
+                Six structured 30-day courses. 15 minutes a day. No guesswork.
+              </p>
+              <a href="/academy" className="btn btn-primary btn-sm">
+                Browse curriculums
+              </a>
+            </>
+          )}
         </div>
 
+        {/* Teacher Card */}
         <div className="card">
           <p className="eyebrow mb-2">Teacher</p>
           <div className="teacher-block">{teacherReview}</div>
 
           <div className="mt-4 pt-4 border-t border-line">
-            <p className="text-xs font-semibold tracking-widest uppercase text-secondary mb-2">Ask about your work</p>
+            <p className="text-xs font-semibold tracking-widest uppercase text-secondary mb-2">
+              Ask about your work
+            </p>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -198,7 +271,11 @@ export function DashboardClient({
                 placeholder="What should I focus on next?"
                 className="flex-1 border border-line rounded-xl bg-cream px-3 py-2 text-sm text-ink outline-none focus:border-accent transition-colors"
               />
-              <button onClick={askTeacher} disabled={asking || !question.trim()} className="btn btn-primary btn-sm">
+              <button
+                onClick={askTeacher}
+                disabled={asking || !question.trim()}
+                className="btn btn-primary btn-sm"
+              >
                 {asking ? '...' : 'Ask'}
               </button>
             </div>
@@ -206,7 +283,9 @@ export function DashboardClient({
           </div>
 
           <div className="mt-4 pt-4 border-t border-line">
-            <p className="text-xs font-semibold tracking-widest uppercase text-secondary mb-2">Quick feedback on a piece</p>
+            <p className="text-xs font-semibold tracking-widest uppercase text-secondary mb-2">
+              Quick feedback on a piece
+            </p>
             <div className="flex items-center gap-3">
               <label className="btn btn-ghost btn-sm cursor-pointer">
                 {quickFile ? 'Change photo' : 'Upload photo'}
@@ -218,10 +297,18 @@ export function DashboardClient({
                 />
               </label>
               {quickPreview && (
-                <img src={quickPreview} alt="Selected piece" className="w-12 h-12 rounded-lg object-cover border border-line" />
+                <img
+                  src={quickPreview}
+                  alt="Selected piece"
+                  className="w-12 h-12 rounded-lg object-cover border border-line"
+                />
               )}
               {quickFile && (
-                <button onClick={getQuickFeedback} disabled={quickLoading} className="btn btn-primary btn-sm">
+                <button
+                  onClick={getQuickFeedback}
+                  disabled={quickLoading}
+                  className="btn btn-primary btn-sm"
+                >
                   {quickLoading ? 'Looking…' : 'Get feedback'}
                 </button>
               )}
@@ -236,6 +323,7 @@ export function DashboardClient({
         </div>
       </div>
 
+      {/* Calendar */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-serif text-xl font-normal">
@@ -265,18 +353,24 @@ export function DashboardClient({
                 onClick={() => done && setSelectedDay(dateStr)}
                 disabled={!done}
                 className={`aspect-square rounded-xl p-1.5 text-xs border text-left ${
-                  isToday ? 'border-accent border-[1.5px]' : done ? 'border-gold/40 bg-[#FFF8E0] cursor-pointer hover:border-gold transition-colors' : 'border-line bg-cream cursor-default'
+                  isToday
+                    ? 'border-accent border-[1.5px]'
+                    : done
+                    ? 'border-gold/40 bg-[#FFF8E0] cursor-pointer hover:border-gold transition-colors'
+                    : 'border-line bg-cream cursor-default'
                 }`}
               >
                 <strong className="block text-xs font-semibold">{day}</strong>
-                <span className="text-[10px] text-muted">{isToday ? 'Today' : done ? '✓' : ''}</span>
+                <span className="text-[10px] text-muted">
+                  {isToday ? 'Today' : done ? '✓' : ''}
+                </span>
               </button>
             )
           })}
         </div>
       </div>
 
-      {/* Day detail popup */}
+      {/* Day detail modal */}
       {selectedDay && (
         <div
           className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50"
@@ -288,16 +382,24 @@ export function DashboardClient({
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif text-xl font-normal">
-                {new Date(selectedDay + 'T00:00:00').toLocaleDateString('default', { month: 'long', day: 'numeric', year: 'numeric' })}
+                {new Date(selectedDay + 'T00:00:00').toLocaleDateString('default', {
+                  month: 'long', day: 'numeric', year: 'numeric'
+                })}
               </h3>
               <button onClick={() => setSelectedDay(null)} className="text-muted text-xl leading-none">×</button>
             </div>
             <div className="flex flex-col gap-3">
               {selectedItems.map((item, i) => (
                 <div key={i} className="border border-line rounded-xl p-3">
-                  <p className="text-xs font-semibold text-secondary tracking-wide uppercase mb-2">{item.label}</p>
+                  <p className="text-xs font-semibold text-secondary tracking-wide uppercase mb-2">
+                    {item.label}
+                  </p>
                   {item.imageUrl && (
-                    <img src={item.imageUrl} alt={item.label} className="w-full rounded-lg object-cover max-h-48 mb-2" />
+                    <img
+                      src={item.imageUrl}
+                      alt={item.label}
+                      className="w-full rounded-lg object-cover max-h-48 mb-2"
+                    />
                   )}
                   {item.text && <p className="text-sm text-muted">{item.text}</p>}
                 </div>
