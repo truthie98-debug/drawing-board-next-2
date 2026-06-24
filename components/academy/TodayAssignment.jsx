@@ -75,8 +75,8 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
 
   if (loading) return (
     <div className="animate-pulse space-y-4">
-      <div className="h-8 bg-gray-100 rounded w-1/2" />
-      <div className="h-64 bg-gray-100 rounded" />
+      <div className="h-8 bg-line rounded w-1/2" />
+      <div className="h-64 bg-line rounded" />
     </div>
   )
 
@@ -84,19 +84,19 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-bold text-yellow-500 uppercase tracking-widest mb-1">
+          <p className="eyebrow">
             Week {dayData.week} — {dayData.weekTheme}
           </p>
-          <h2 className="text-2xl font-black text-gray-900">
+          <h2 className="font-serif text-4xl font-normal tracking-tight leading-none">
             Day {dayNumber} — {dayData.topic}
           </h2>
         </div>
 
         {bothComplete && (
-          <div className="flex items-center gap-2 bg-yellow-400 text-black text-sm font-bold px-4 py-2 rounded-full">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <div className="pill mt-1 flex-shrink-0">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             Day Complete
@@ -123,13 +123,12 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
       </div>
 
       {bothComplete && (
-        <div className="bg-yellow-400/10 border-2 border-yellow-400 rounded-xl p-6 text-center">
-          <p className="text-2xl mb-1">🎉</p>
-          <p className="font-black text-gray-900 text-lg">Day {dayNumber} complete.</p>
-          <p className="text-gray-500 text-sm mt-1">
+        <div className="card border-accent bg-accent/5 text-center">
+          <p className="font-serif text-2xl font-normal mb-1">Day {dayNumber} complete.</p>
+          <p className="text-muted text-sm">
             {dayNumber < curriculum.totalDays
               ? `Day ${dayNumber + 1} is now unlocked.`
-              : "You've completed the full curriculum!"}
+              : "You have completed the full curriculum."}
           </p>
         </div>
       )}
