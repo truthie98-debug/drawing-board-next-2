@@ -73,16 +73,18 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
   }
 
   return (
-    <div className={`border-2 rounded-lg p-5 transition-all duration-300 ${
-      complete ? 'border-yellow-400 bg-yellow-400/10' : 'border-gray-200 bg-white'
+    <div className={`card-sm transition-all duration-300 ${
+      complete ? 'border-accent bg-accent/5' : ''
     }`}>
       <div className="flex items-start justify-between gap-3 mb-4">
         <div>
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+          <p className="eyebrow">
             {exercise.id === 'ex1' ? 'Exercise 1' : 'Exercise 2'}
-          </span>
-          <h3 className="text-base font-bold text-gray-900 mt-0.5">{exercise.title}</h3>
-          <span className="text-xs text-gray-400">{exercise.duration}</span>
+          </p>
+          <h3 className="font-serif text-xl font-normal tracking-tight">
+            {exercise.title}
+          </h3>
+          <span className="text-xs text-muted">{exercise.duration}</span>
         </div>
 
         <button
@@ -90,12 +92,12 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
           disabled={saving}
           className={`flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
             complete
-              ? 'bg-yellow-400 border-yellow-400'
-              : 'border-gray-300 hover:border-yellow-400'
+              ? 'bg-accent border-accent'
+              : 'border-line hover:border-accent'
           }`}
         >
           {complete && (
-            <svg className="w-4 h-4 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           )}
@@ -104,49 +106,47 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
 
       <ul className="space-y-1.5 mb-5">
         {exercise.instructions.map((line, i) => (
-          <li key={i} className="flex gap-2 text-sm text-gray-600">
-            <span className="text-yellow-500 mt-0.5 flex-shrink-0">—</span>
+          <li key={i} className="flex gap-2 text-sm text-ink leading-relaxed">
+            <span className="text-accent mt-0.5 flex-shrink-0">—</span>
             <span>{line}</span>
           </li>
         ))}
       </ul>
 
-      <div className="border-t border-gray-100 pt-4">
+      <div className="border-t border-line pt-4">
         {uploadUrl ? (
           <div className="space-y-2">
-            <img src={uploadUrl} alt="Uploaded work" className="w-full h-32 object-cover rounded-lg" />
+            <img
+              src={uploadUrl}
+              alt="Uploaded work"
+              className="w-full h-32 object-cover rounded-xl border border-line"
+            />
             <button
               onClick={() => fileRef.current?.click()}
-              className="text-xs text-gray-400 hover:text-gray-600 underline"
+              className="text-xs text-muted hover:text-accent underline"
             >
               Replace upload
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => fileRef.current?.click()}
-            disabled={uploading}
-            className="w-full py-2.5 border-2 border-dashed border-gray-200 rounded-lg text-sm text-gray-400 hover:border-yellow-400 hover:text-yellow-500 transition-all duration-200 flex items-center justify-center gap-2"
-          >
+          <label className="flex flex-col items-center justify-center border-[1.5px] border-dashed border-line rounded-xl py-4 text-center cursor-pointer hover:border-accent transition-colors bg-cream">
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleUpload}
+            />
             {uploading ? (
-              <span>Uploading...</span>
+              <span className="text-xs text-muted">Uploading...</span>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                </svg>
-                Upload your work
+                <span className="text-xl text-line mb-1">↑</span>
+                <span className="text-xs text-muted">Upload your work (optional)</span>
               </>
             )}
-          </button>
+          </label>
         )}
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleUpload}
-        />
       </div>
     </div>
   )
