@@ -44,10 +44,30 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .limit(60)
 
-  const teacherReview = await getOrGenerateTeacherReview(supabase, user.id, profile, submissions || [])
+  const teacherReview = await getOrGenerateTeacherReview(
+    supabase, user.id, profile, submissions || []
+  )
 
   const todayIndex = getTodayFundamentalIndex()
   const todayFundamental = FUNDAMENTALS[todayIndex]
+
+  // Fetch active Academy enrollment
+  const { data: academyEnrollment } = await supabase
+    .from('academy_enrollments')
+    .select('curriculum_id, current_day, started_at')
+    .eq('user_id', user.id)
+    .is('completed_at', null)
+    .order('started_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  // Fetch completed days count
+  const { count: academyCompletedDays } = await supabase
+    .from('academy_progress')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('curriculum_id', academyEnrollment?.curriculum_id ?? 0)
+    .eq('is_complete', true)
 
   return (
     <DashboardClient
@@ -58,6 +78,8 @@ export default async function DashboardPage() {
       colorLabCompletions={colorLabCompletions || []}
       reflections={reflections || []}
       teacherReview={teacherReview}
+      academyEnrollment={academyEnrollment ?? null}
+      academyCompletedDays={academyCompletedDays ?? 0}
     />
   )
 }
