@@ -147,36 +147,38 @@ export default function AcademyPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (showComplete && curriculum) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-sm border-2 border-yellow-400 text-center">
-          <div className="text-5xl mb-4">🏆</div>
-          <h1 className="text-2xl font-black text-gray-900 mb-2">
-            {curriculum.title} Complete
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="card max-w-md w-full text-center">
+          <p className="eyebrow">Curriculum Complete</p>
+          <h1 className="font-serif text-4xl font-normal tracking-tight mb-2">
+            {curriculum.title}
           </h1>
-          <p className="text-gray-500 mb-6">
+          <p className="text-muted mb-8">
             You completed all {curriculum.totalDays} days. That is a real commitment.
           </p>
+
           <div className="grid grid-cols-3 gap-3 mb-8">
-            <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-yellow-500 text-xl font-black">{completedCount}</p>
-              <p className="text-gray-400 text-xs">Days Done</p>
+            <div className="bg-cream border border-line rounded-xl p-3">
+              <p className="text-accent text-xl font-semibold">{completedCount}</p>
+              <p className="text-muted text-xs">Days Done</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-yellow-500 text-xl font-black">{calcStreak()}</p>
-              <p className="text-gray-400 text-xs">Best Streak</p>
+            <div className="bg-cream border border-line rounded-xl p-3">
+              <p className="text-accent text-xl font-semibold">{calcStreak()}</p>
+              <p className="text-muted text-xs">Best Streak</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-yellow-500 text-xl font-black">100%</p>
-              <p className="text-gray-400 text-xs">Complete</p>
+            <div className="bg-cream border border-line rounded-xl p-3">
+              <p className="text-accent text-xl font-semibold">100%</p>
+              <p className="text-muted text-xs">Complete</p>
             </div>
           </div>
+
           <button
             onClick={() => {
               setEnrollment(null)
@@ -184,7 +186,7 @@ export default function AcademyPage() {
               setAllProgress([])
               setAllUploads({})
             }}
-            className="w-full py-3 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors"
+            className="btn btn-primary btn-md w-full"
           >
             Start Next Curriculum
           </button>
@@ -195,90 +197,82 @@ export default function AcademyPage() {
 
   if (!enrollment) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 py-12">
-          <div className="mb-10">
-            <p className="text-yellow-500 text-xs font-bold uppercase tracking-widest mb-2">
-              The Drawing Board
-            </p>
-            <h1 className="text-4xl font-black text-gray-900 leading-tight mb-3">
-              Academy
-            </h1>
-            <p className="text-gray-500 max-w-xl">
-              A structured 6-month art curriculum. One curriculum at a time.
-              15 to 30 minutes a day. No guesswork — just show up and draw.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {CURRICULUMS.map((c: any) => (
-              <CurriculumCard
-                key={c.id}
-                curriculum={c}
-                status="available"
-                onStart={handleStart}
-              />
-            ))}
-          </div>
+      <div className="max-w-5xl mx-auto px-6 py-12">
+        <p className="eyebrow">The Drawing Board</p>
+        <h1 className="font-serif text-5xl font-normal tracking-tight leading-none mb-3">
+          Academy
+        </h1>
+        <p className="text-muted max-w-xl mb-10">
+          A structured 6-month art curriculum. One curriculum at a time.
+          15 to 30 minutes a day. No guesswork — just show up and draw.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {CURRICULUMS.map((c: any) => (
+            <CurriculumCard
+              key={c.id}
+              curriculum={c}
+              status="available"
+              onStart={handleStart}
+            />
+          ))}
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+    <div className="max-w-2xl mx-auto px-6 py-10 space-y-6">
 
-        <MonthHeader
-          curriculum={curriculum}
-          currentDay={viewingDay}
-          completedDays={completedCount}
-          streak={calcStreak()}
-        />
+      <MonthHeader
+        curriculum={curriculum}
+        currentDay={viewingDay}
+        completedDays={completedCount}
+        streak={calcStreak()}
+      />
 
-        <DayNav
-          currentDay={viewingDay}
-          totalDays={curriculum.totalDays}
-          unlockedUpTo={unlockedUpTo}
-          onPrev={() => setViewingDay((d: number) => Math.max(1, d - 1))}
-          onNext={() => setViewingDay((d: number) => Math.min(unlockedUpTo, d + 1))}
-        />
+      <DayNav
+        currentDay={viewingDay}
+        totalDays={curriculum.totalDays}
+        unlockedUpTo={unlockedUpTo}
+        onPrev={() => setViewingDay((d: number) => Math.max(1, d - 1))}
+        onNext={() => setViewingDay((d: number) => Math.min(unlockedUpTo, d + 1))}
+      />
 
-        <TodayAssignment
-          curriculum={curriculum}
-          dayNumber={viewingDay}
-          userId={user?.id}
-          onDayComplete={handleDayComplete}
-        />
+      <TodayAssignment
+        curriculum={curriculum}
+        dayNumber={viewingDay}
+        userId={user?.id}
+        onDayComplete={handleDayComplete}
+      />
 
-        <DayGrid
-          curriculum={curriculum}
-          currentDay={viewingDay}
-          completedDays={completedDayNumbers}
-          unlockedUpTo={unlockedUpTo}
-          uploads={allUploads}
-          onSelectDay={setViewingDay}
-        />
+      <DayGrid
+        curriculum={curriculum}
+        currentDay={viewingDay}
+        completedDays={completedDayNumbers}
+        unlockedUpTo={unlockedUpTo}
+        uploads={allUploads}
+        onSelectDay={setViewingDay}
+      />
 
-        <div className="text-center pt-2 pb-8">
-          <button
-            onClick={async () => {
-              if (!confirm('This will end your current curriculum. Are you sure?')) return
-              await supabase
-                .from('academy_enrollments')
-                .update({ completed_at: new Date().toISOString() })
-                .eq('id', enrollment.id)
-              setEnrollment(null)
-              setAllProgress([])
-              setAllUploads({})
-              setViewingDay(null)
-            }}
-            className="text-xs text-gray-400 hover:text-gray-600 underline"
-          >
-            Exit curriculum
-          </button>
-        </div>
-
+      <div className="text-center pt-2 pb-8">
+        <button
+          onClick={async () => {
+            if (!confirm('This will end your current curriculum. Are you sure?')) return
+            await supabase
+              .from('academy_enrollments')
+              .update({ completed_at: new Date().toISOString() })
+              .eq('id', enrollment.id)
+            setEnrollment(null)
+            setAllProgress([])
+            setAllUploads({})
+            setViewingDay(null)
+          }}
+          className="text-xs text-muted hover:text-accent underline"
+        >
+          Exit curriculum
+        </button>
       </div>
+
     </div>
   )
 }
