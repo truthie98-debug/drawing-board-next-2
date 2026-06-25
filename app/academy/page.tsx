@@ -134,7 +134,11 @@ export default function AcademyPage() {
     .map((p: any) => p.day_number)
 
   const completedCount = completedDayNumbers.length
-  const unlockedUpTo = enrollment?.current_day ?? 1
+
+  const highestCompleted = completedDayNumbers.length > 0
+    ? Math.max(...completedDayNumbers)
+    : 0
+  const unlockedUpTo = Math.max(enrollment?.current_day ?? 1, highestCompleted + 1)
 
   function calcStreak() {
     if (completedDayNumbers.length === 0) return 0
