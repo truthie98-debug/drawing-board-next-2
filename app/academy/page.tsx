@@ -98,8 +98,6 @@ export default function AcademyPage() {
     if (!enrollment || !user) return
 
     const curriculum: any = getCurriculumById(enrollment.curriculum_id)
-    await loadProgress(user.id, enrollment.curriculum_id)
-
     const nextDay = enrollment.current_day + 1
 
     if (nextDay > curriculum.totalDays) {
@@ -107,6 +105,7 @@ export default function AcademyPage() {
         .from('academy_enrollments')
         .update({ completed_at: new Date().toISOString() })
         .eq('id', enrollment.id)
+      await loadProgress(user.id, enrollment.curriculum_id)
       setShowComplete(true)
       return
     }
@@ -118,7 +117,12 @@ export default function AcademyPage() {
       .select()
       .single()
 
-    if (updated) setEnrollment(updated)
+    if (updated) {
+      setEnrollment(updated)
+      setViewingDay(nextDay)
+    }
+
+    await loadProgress(user.id, enrollment.curriculum_id)
   }
 
   const curriculum: any = enrollment
@@ -163,7 +167,6 @@ export default function AcademyPage() {
           <p className="text-muted mb-8">
             You completed all {curriculum.totalDays} days. That is a real commitment.
           </p>
-
           <div className="grid grid-cols-3 gap-3 mb-8">
             <div className="bg-cream border border-line rounded-xl p-3">
               <p className="text-accent text-xl font-semibold">{completedCount}</p>
@@ -178,7 +181,6 @@ export default function AcademyPage() {
               <p className="text-muted text-xs">Complete</p>
             </div>
           </div>
-
           <button
             onClick={() => {
               setEnrollment(null)
