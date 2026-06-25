@@ -1,13 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase-browser'
-
-type TrackCompletion = {
-  id: string
-  image_url: string | null
-  completed_at: string
-} | null
 
 type WeeklyExercise = {
   id: string
@@ -49,10 +43,10 @@ const COLOR_HARMONY_EXERCISES: WeeklyExercise[] = [
 ]
 
 const MASTER_COLOR_EXERCISES: WeeklyExercise[] = [
-  { id: 'mc-1', track: 'Master Study', title: 'Copy a Klimt Palette', goal: 'Extract and apply the decorative color logic of Gustav Klimt.', how: ['Find a Klimt painting — The Kiss, Portrait of Adele, or similar.', 'Identify his key colors and create a swatch sheet.', 'Paint a portrait or figure using only his extracted palette.', 'Focus on gold tones, deep darks, and flat decorative color areas.'], review: 'What made Klimt\'s palette feel opulent rather than overwhelming?' },
+  { id: 'mc-1', track: 'Master Study', title: 'Copy a Klimt Palette', goal: 'Extract and apply the decorative color logic of Gustav Klimt.', how: ['Find a Klimt painting — The Kiss, Portrait of Adele, or similar.', 'Identify his key colors and create a swatch sheet.', 'Paint a portrait or figure using only his extracted palette.', 'Focus on gold tones, deep darks, and flat decorative color areas.'], review: 'What made Klimt palette feel opulent rather than overwhelming?' },
   { id: 'mc-2', track: 'Master Study', title: 'Film Still Color Extraction', goal: 'Extract a cinematic color palette and apply it to your own work.', how: ['Choose a film still with a strong color grade — Blade Runner, Moonlight, or similar.', 'Extract the 5 dominant colors into a swatch.', 'Paint an original scene using only these extracted colors.', 'Match the mood of the film, not just the colors.'], review: 'Did your scene capture the mood of the original film?' },
   { id: 'mc-3', track: 'Master Study', title: 'Moebius Color Logic', goal: 'Study how Jean Giraud used flat, graphic color with maximum impact.', how: ['Find a Moebius illustration with strong color.', 'Identify how he uses flat color areas without gradients.', 'Create a character or environment in his graphic color style.', 'Focus on clean edges, bold hues, and deliberate color placement.'], review: 'How did working without gradients change your color decisions?' },
-  { id: 'mc-4', track: 'Master Study', title: 'Mucha Poster Study', goal: 'Understand Alphonse Mucha\'s soft, harmonious color language.', how: ['Find an Alphonse Mucha poster.', 'Identify his palette — soft pastels, warm skin tones, muted backgrounds.', 'Paint a portrait or figure using only his color approach.', 'Focus on soft transitions and the relationship between figure and decorative background.'], review: 'What made Mucha\'s palette feel warm and inviting?' },
+  { id: 'mc-4', track: 'Master Study', title: 'Mucha Poster Study', goal: 'Understand Alphonse Mucha soft, harmonious color language.', how: ['Find an Alphonse Mucha poster.', 'Identify his palette — soft pastels, warm skin tones, muted backgrounds.', 'Paint a portrait or figure using only his color approach.', 'Focus on soft transitions and the relationship between figure and decorative background.'], review: 'What made Mucha palette feel warm and inviting?' },
   { id: 'mc-5', track: 'Master Study', title: 'Sachin Teng Illustration Breakdown', goal: 'Analyze the color structure of a contemporary illustrator.', how: ['Find a Sachin Teng illustration with strong color.', 'Create a swatch sheet of every color used.', 'Identify which colors dominate, support, and accent.', 'Paint an original figure in her color style.'], review: 'What surprised you about how few or how many colors she actually used?' },
   { id: 'mc-6', track: 'Master Study', title: 'Hokusai Color Study', goal: 'Work within the restrained, powerful palette of Japanese woodblock prints.', how: ['Find a Hokusai print — The Great Wave or similar.', 'Identify his limited palette — Prussian blue, red, black, cream, and yellow.', 'Paint a landscape or scene using only his color scheme.', 'Focus on how negative space and flat color create depth.'], review: 'How did the flat, limited palette force you to be more deliberate?' },
   { id: 'mc-7', track: 'Master Study', title: 'Rembrandt Light Study', goal: 'Understand how Rembrandt used color temperature to sculpt form.', how: ['Find a Rembrandt portrait with his characteristic warm light.', 'Identify how warm light plays against cool, dark shadows.', 'Paint a portrait using his color approach — warm highlights, deep cool shadows.', 'Keep your palette limited — ochre, brown, black, white, and one red.'], review: 'How did the extreme light-dark contrast affect the emotional weight?' },
@@ -60,7 +54,7 @@ const MASTER_COLOR_EXERCISES: WeeklyExercise[] = [
   { id: 'mc-9', track: 'Master Study', title: 'Eyvind Earle Background Study', goal: 'Understand how a graphic color approach creates atmospheric depth.', how: ['Find an Eyvind Earle background painting from Sleeping Beauty.', 'Identify how he uses flat color planes to create depth.', 'Paint an environment in his style — graphic, flat, but atmospheric.', 'Focus on the silhouette quality of each color plane.'], review: 'How did flat color planes create more or less depth than rendered gradients?' },
   { id: 'mc-10', track: 'Master Study', title: 'Egon Schiele Color Extraction', goal: 'Study how Schiele used minimal, raw color to express psychological intensity.', how: ['Find an Egon Schiele figure drawing with color.', 'Note how he uses orange, ochre, and raw skin tones against stark backgrounds.', 'Paint a figure using his raw, minimal color approach.', 'Do not refine or polish — keep the color feeling raw and direct.'], review: 'How did the raw color approach change the emotional quality of the figure?' },
   { id: 'mc-11', track: 'Master Study', title: 'Studio Ghibli Color Palette', goal: 'Understand how Ghibli creates warmth and nostalgia through color.', how: ['Find a Ghibli background painting from Spirited Away or My Neighbor Totoro.', 'Extract the palette — warm neutrals, soft greens, golden yellows.', 'Paint an environment or character scene using their palette approach.', 'Focus on how the colors feel safe, warm, and lived-in.'], review: 'What specific color choices made the scene feel nostalgic?' },
-  { id: 'mc-12', track: 'Master Study', title: 'Personal Master Study', goal: 'Study the color palette of an artist you personally admire.', how: ['Choose any artist whose color work inspires you.', 'Find one piece with strong color that you want to understand.', 'Extract the full palette into a swatch sheet.', 'Paint an original piece using only that extracted palette.'], review: 'What did studying this artist\'s palette teach you about your own color instincts?' },
+  { id: 'mc-12', track: 'Master Study', title: 'Personal Master Study', goal: 'Study the color palette of an artist you personally admire.', how: ['Choose any artist whose color work inspires you.', 'Find one piece with strong color that you want to understand.', 'Extract the full palette into a swatch sheet.', 'Paint an original piece using only that extracted palette.'], review: 'What did studying this palette teach you about your own color instincts?' },
 ]
 
 function getWeekExercise(exercises: WeeklyExercise[], weekKey: string): WeeklyExercise {
@@ -83,10 +77,26 @@ export function AssignmentsClient({
 
   const exercises = [limitedPaletteExercise, colorHarmonyExercise, masterStudyExercise]
 
-  const [completions, setCompletions] = useState<Record<string, { image_url: string | null, completed_at: string } | null>>({})
+  const [completions, setCompletions] = useState<Record<string, any>>({})
   const [previews, setPreviews] = useState<Record<string, string>>({})
   const [files, setFiles] = useState<Record<string, File>>({})
   const [saving, setSaving] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    async function loadCompletions() {
+      const { data } = await supabase
+        .from('color_lab_completions')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('week_key', weekKey)
+      if (data) {
+        const map: Record<string, any> = {}
+        data.forEach((c: any) => { map[c.exercise_id] = c })
+        setCompletions(map)
+      }
+    }
+    loadCompletions()
+  }, [userId, weekKey])
 
   function handleFile(exerciseId: string, file: File | null) {
     if (!file) return
@@ -160,7 +170,7 @@ export function AssignmentsClient({
                   {exercise.track}
                 </span>
                 {completion && (
-                  <span className="text-xs text-green-600 font-semibold">
+                  <span className="text-xs text-accent font-semibold">
                     Completed this week ✓
                   </span>
                 )}
@@ -209,13 +219,25 @@ export function AssignmentsClient({
                       className="w-24 h-24 rounded-xl object-cover border border-line"
                     />
                   )}
-                  <p className="text-sm font-semibold text-green-700 mt-1">
-                    Saved for this week ✓
-                  </p>
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm font-semibold text-accent">
+                      Completed this week ✓
+                    </p>
+                    <button
+                      onClick={() => setCompletions(prev => {
+                        const next = { ...prev }
+                        delete next[exercise.id]
+                        return next
+                      })}
+                      className="text-xs text-muted hover:text-accent underline self-start"
+                    >
+                      Redo this exercise
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
-                  <label className="flex flex-col items-center justify-center border-[1.5px] border-dashed border-line rounded-xl py-6 text-center cursor-pointer hover:border-secondary transition-colors bg-cream">
+                  <label className="flex flex-col items-center justify-center border-[1.5px] border-dashed border-line rounded-xl py-6 text-center cursor-pointer hover:border-accent transition-colors bg-cream">
                     <input
                       type="file"
                       accept="image/*"
