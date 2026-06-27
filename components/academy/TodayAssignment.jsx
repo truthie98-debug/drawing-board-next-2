@@ -13,6 +13,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
   useEffect(() => {
     async function loadProgress() {
       if (!userId || !dayData) return
+      setLoading(true)
       const [{ data: prog }, { data: ups }] = await Promise.all([
         supabase
           .from('academy_progress')
@@ -20,7 +21,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
           .eq('user_id', userId)
           .eq('curriculum_id', curriculum.id)
           .eq('day_number', dayNumber)
-          .single(),
+          .maybeSingle(),
         supabase
           .from('academy_uploads')
           .select('*')
@@ -28,7 +29,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
           .eq('curriculum_id', curriculum.id)
           .eq('day_number', dayNumber)
       ])
-      setProgress(prog)
+      setProgress(prog ?? null)
       const uploadMap = {}
       ups?.forEach(u => { uploadMap[u.exercise_id] = u.file_url })
       setUploads(uploadMap)
@@ -37,28 +38,9 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
     loadProgress()
   }, [userId, dayNumber, curriculum.id])
 
-  useEffect(() => {
-    if (!userId) return
-    const channel = supabase
-      .channel('progress-watch')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'academy_progress',
-        filter: `user_id=eq.${userId}`
-      }, (payload) => {
-        const updated = payload.new
-        if (
-          updated.curriculum_id === curriculum.id &&
-          updated.day_number === dayNumber
-        ) {
-          // Only update local state — never auto-advance
-          setProgress(updated)
-        }
-      })
-      .subscribe()
-    return () => supabase.removeChannel(channel)
-  }, [userId, dayNumber, curriculum.id])
+  function handleExerciseComplete(updated) {
+    setProgress(prev => ({ ...prev, ...updated }))
+  }
 
   if (!dayData) return null
   if (loading) return (
@@ -74,9 +56,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="eyebrow">
-            Week {dayData.week} — {dayData.weekTheme}
-          </p>
+          <p className="eyebrow">Week {dayData.week} — {dayData.weekTheme}</p>
           <h2 className="font-serif text-4xl font-normal tracking-tight leading-none">
             Day {dayNumber} — {dayData.topic}
           </h2>
@@ -105,6 +85,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
                 : progress?.ex2_complete ?? false
             }
             initialUploadUrl={uploads[exercise.id] ?? null}
+            onComplete={handleExerciseComplete}
           />
         ))}
       </div>
@@ -119,19 +100,12 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
                 : "You've completed the full curriculum."}
             </p>
           </div>
-          {dayNumber < curriculum.totalDays && (
-            <button
-              onClick={onDayComplete}
-              className="btn btn-primary btn-md"
-            >
+          {dayNumber < curriculum.totalDays ? (
+            <button onClick={onDayComplete} className="btn btn-primary btn-md">
               Next Day →
             </button>
-          )}
-          {dayNumber >= curriculum.totalDays && (
-            <button
-              onClick={onDayComplete}
-              className="btn btn-primary btn-md"
-            >
+          ) : (
+            <button onClick={onDayComplete} className="btn btn-primary btn-md">
               Complete Curriculum
             </button>
           )}
