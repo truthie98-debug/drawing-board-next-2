@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase-browser'
 
-export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId, initialComplete = false, initialUploadUrl = null }) {
+export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId, initialComplete = false, initialUploadUrl = null, onComplete }) {
   const [complete, setComplete] = useState(initialComplete)
   const [uploadUrl, setUploadUrl] = useState(initialUploadUrl)
   const [uploading, setUploading] = useState(false)
@@ -39,6 +39,7 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
     }, { onConflict: 'user_id,curriculum_id,day_number' })
 
     setSaving(false)
+    onComplete?.({ ex1_complete: ex1, ex2_complete: ex2, is_complete: isComplete })
   }
 
   async function handleUpload(e) {
