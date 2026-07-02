@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase-browser'
 import ExerciseCard from './ExerciseCard'
 
-export default function TodayAssignment({ curriculum, dayNumber, userId, onDayComplete, onProgressUpdate }) {
+export default function TodayAssignment({ curriculum, dayNumber, userId, onDayComplete, onProgressUpdate, advancing = false }) {
   const [progress, setProgress] = useState(null)
   const [uploads, setUploads] = useState({})
   const [loading, setLoading] = useState(true)
@@ -116,12 +116,12 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
             </p>
           </div>
           {dayNumber < curriculum.totalDays ? (
-            <button onClick={onDayComplete} className="btn btn-primary btn-md">
-              Next Day →
+            <button onClick={onDayComplete} disabled={advancing} className="btn btn-primary btn-md disabled:opacity-50">
+              {advancing ? 'Saving...' : 'Next Day →'}
             </button>
           ) : (
-            <button onClick={onDayComplete} className="btn btn-primary btn-md">
-              Complete Curriculum
+            <button onClick={onDayComplete} disabled={advancing} className="btn btn-primary btn-md disabled:opacity-50">
+              {advancing ? 'Saving...' : 'Complete Curriculum'}
             </button>
           )}
         </div>
