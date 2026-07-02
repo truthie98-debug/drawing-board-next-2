@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase-browser'
 
-export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId, initialComplete = false, initialUploadUrl = null, onComplete }) {
+export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId, initialComplete = false, initialUploadUrl = null, onComplete, hasEx2 = false }) {
   const [complete, setComplete] = useState(initialComplete)
   const [uploadUrl, setUploadUrl] = useState(initialUploadUrl)
   const [uploading, setUploading] = useState(false)
@@ -26,7 +26,7 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
 
     const ex1 = exercise.id === 'ex1' ? newVal : (existing?.ex1_complete ?? false)
     const ex2 = exercise.id === 'ex2' ? newVal : (existing?.ex2_complete ?? false)
-    const isComplete = ex1 && ex2
+    const isComplete = hasEx2 ? (ex1 && ex2) : ex1
 
     await supabase.from('academy_progress').upsert({
       user_id: userId,
