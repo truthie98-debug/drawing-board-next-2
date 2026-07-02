@@ -125,6 +125,18 @@ export default function AcademyPage() {
     await loadProgress(user.id, enrollment.curriculum_id)
   }
 
+  function handleProgressUpdate(dayNumber: number, updated: any) {
+    setAllProgress(prev => {
+      const idx = prev.findIndex((p: any) => p.day_number === dayNumber)
+      if (idx === -1) {
+        return [...prev, { day_number: dayNumber, curriculum_id: enrollment.curriculum_id, user_id: user.id, ...updated }]
+      }
+      const copy = [...prev]
+      copy[idx] = { ...copy[idx], ...updated }
+      return copy
+    })
+  }
+
   const curriculum: any = enrollment
     ? getCurriculumById(enrollment.curriculum_id)
     : null
@@ -249,6 +261,7 @@ export default function AcademyPage() {
         dayNumber={viewingDay}
         userId={user?.id}
         onDayComplete={handleDayComplete}
+        onProgressUpdate={handleProgressUpdate}
       />
 
       <DayGrid
