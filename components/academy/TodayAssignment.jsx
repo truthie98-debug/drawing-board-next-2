@@ -50,7 +50,13 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
     </div>
   )
 
-  const bothComplete = progress?.ex1_complete && progress?.ex2_complete
+  const hasEx2 = dayData.exercises.some(e => e.id === 'ex2')
+
+  const dayComplete = dayData.exercises.every(exercise =>
+    exercise.id === 'ex1'
+      ? progress?.ex1_complete
+      : progress?.ex2_complete
+  )
 
   return (
     <div className="space-y-6">
@@ -61,7 +67,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
             Day {dayNumber} — {dayData.topic}
           </h2>
         </div>
-        {bothComplete && (
+        {dayComplete && (
           <div className="pill mt-1 flex-shrink-0">
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -79,6 +85,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
             dayNumber={dayNumber}
             curriculumId={curriculum.id}
             userId={userId}
+            hasEx2={hasEx2}
             initialComplete={
               exercise.id === 'ex1'
                 ? progress?.ex1_complete ?? false
@@ -90,7 +97,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
         ))}
       </div>
 
-      {bothComplete && (
+      {dayComplete && (
         <div className="card border-accent bg-accent/5 text-center space-y-4">
           <div>
             <p className="font-serif text-2xl font-normal mb-1">Day {dayNumber} complete.</p>
@@ -113,3 +120,4 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
       )}
     </div>
   )
+}
