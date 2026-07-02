@@ -113,4 +113,3 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
       )}
     </div>
   )
-}
