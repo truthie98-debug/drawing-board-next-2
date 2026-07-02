@@ -3,16 +3,25 @@
 import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase-browser'
 
-export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId, initialComplete = false, initialUploadUrl = null, onComplete, hasEx2 = false }) {
+export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId, initialComplete = false, initialUploadUrl = null, onComplete, hasEx2 = false, hasUploadForDay = false, onUploadComplete }) {
   const [complete, setComplete] = useState(initialComplete)
   const [uploadUrl, setUploadUrl] = useState(initialUploadUrl)
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [showUploadWarning, setShowUploadWarning] = useState(false)
   const fileRef = useRef()
   const supabase = createClient()
 
   async function handleCheck() {
     const newVal = !complete
+    const canCheck = newVal ? (hasUploadForDay || !!uploadUrl) : true
+
+    if (!canCheck) {
+      setShowUploadWarning(true)
+      return
+    }
+    setShowUploadWarning(false)
+
     setComplete(newVal)
     setSaving(true)
 
@@ -60,6 +69,7 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
         .getPublicUrl(path)
 
       setUploadUrl(publicUrl)
+      setShowUploadWarning(false)
 
       await supabase.from('academy_uploads').upsert({
         user_id: userId,
@@ -68,6 +78,8 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
         exercise_id: exercise.id,
         file_url: publicUrl,
       }, { onConflict: 'user_id,curriculum_id,day_number,exercise_id' })
+
+      onUploadComplete?.(exercise.id, publicUrl)
     }
 
     setUploading(false)
@@ -104,6 +116,12 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
           )}
         </button>
       </div>
+
+      {showUploadWarning && (
+        <div className="mb-4 px-3 py-2 rounded-lg bg-accent/10 border border-accent/30 text-xs text-accent">
+          Upload a photo of your work for this day before marking it complete.
+        </div>
+      )}
 
       <ul className="space-y-1.5 mb-5">
         {exercise.instructions.map((line, i) => (
@@ -143,7 +161,7 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
             ) : (
               <>
                 <span className="text-xl text-line mb-1">↑</span>
-                <span className="text-xs text-muted">Upload your work (optional)</span>
+                <span className="text-xs text-muted">Upload your work</span>
               </>
             )}
           </label>
