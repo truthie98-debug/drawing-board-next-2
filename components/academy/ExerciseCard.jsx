@@ -80,6 +80,9 @@ export default function ExerciseCard({ exercise, dayNumber, curriculumId, userId
       }, { onConflict: 'user_id,curriculum_id,day_number,exercise_id' })
 
       onUploadComplete?.(exercise.id, publicUrl)
+    } else {
+      console.error('Upload failed:', error)
+      alert(`Upload failed: ${error.message}`)
     }
 
     setUploading(false)
