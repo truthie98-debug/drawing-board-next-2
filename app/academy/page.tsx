@@ -17,6 +17,7 @@ export default function AcademyPage() {
   const [viewingDay, setViewingDay] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [starting, setStarting] = useState(false)
+  const [advancing, setAdvancing] = useState(false)
   const [showComplete, setShowComplete] = useState(false)
   const supabase = createClient()
 
@@ -95,7 +96,8 @@ export default function AcademyPage() {
   }
 
   async function handleDayComplete() {
-    if (!enrollment || !user) return
+    if (!enrollment || !user || advancing) return
+    setAdvancing(true)
 
     const curriculum: any = getCurriculumById(enrollment.curriculum_id)
     const nextDay = enrollment.current_day + 1
@@ -107,6 +109,7 @@ export default function AcademyPage() {
         .eq('id', enrollment.id)
       await loadProgress(user.id, enrollment.curriculum_id)
       setShowComplete(true)
+      setAdvancing(false)
       return
     }
 
@@ -123,6 +126,7 @@ export default function AcademyPage() {
     }
 
     await loadProgress(user.id, enrollment.curriculum_id)
+    setAdvancing(false)
   }
 
   function handleProgressUpdate(dayNumber: number, updated: any) {
@@ -262,6 +266,7 @@ export default function AcademyPage() {
         userId={user?.id}
         onDayComplete={handleDayComplete}
         onProgressUpdate={handleProgressUpdate}
+        advancing={advancing}
       />
 
       <DayGrid
