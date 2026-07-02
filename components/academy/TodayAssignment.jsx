@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase-browser'
 import ExerciseCard from './ExerciseCard'
 
-export default function TodayAssignment({ curriculum, dayNumber, userId, onDayComplete }) {
+export default function TodayAssignment({ curriculum, dayNumber, userId, onDayComplete, onProgressUpdate }) {
   const [progress, setProgress] = useState(null)
   const [uploads, setUploads] = useState({})
   const [loading, setLoading] = useState(true)
@@ -40,6 +40,11 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
 
   function handleExerciseComplete(updated) {
     setProgress(prev => ({ ...prev, ...updated }))
+    onProgressUpdate?.(dayNumber, updated)
+  }
+
+  function handleUploadComplete(exerciseId, url) {
+    setUploads(prev => ({ ...prev, [exerciseId]: url }))
   }
 
   if (!dayData) return null
@@ -51,6 +56,7 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
   )
 
   const hasEx2 = dayData.exercises.some(e => e.id === 'ex2')
+  const hasUploadForDay = Object.keys(uploads).length > 0
 
   const dayComplete = dayData.exercises.every(exercise =>
     exercise.id === 'ex1'
@@ -86,6 +92,8 @@ export default function TodayAssignment({ curriculum, dayNumber, userId, onDayCo
             curriculumId={curriculum.id}
             userId={userId}
             hasEx2={hasEx2}
+            hasUploadForDay={hasUploadForDay}
+            onUploadComplete={handleUploadComplete}
             initialComplete={
               exercise.id === 'ex1'
                 ? progress?.ex1_complete ?? false
